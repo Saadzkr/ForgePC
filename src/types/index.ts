@@ -128,24 +128,3 @@ export type ActivityType =
   | 'BADGE_EARNED'
   | 'BUILD_UPDATED'
   | 'COMPONENT_ADDED'
-
-export type ThemeConfig = {
-  primary: string
-  secondary: string
-  accent: string
-  background: string
-  foreground: string
-  terminal: {
-    bg: string
-    fg: string
-    green: string
-    amber: string
-    red: string
-    blue: string
-  }
-  crt: {
-    phosphor: string
-    scanline: string
-    vignette: string
-  }
-}

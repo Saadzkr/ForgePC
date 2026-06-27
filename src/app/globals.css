@@ -574,36 +574,4 @@
     100% { background-position: -200% 0; }
   }
 
-  .float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-12px); }
-  }
-
-  .glow {
-    box-shadow:
-      0 0 20px rgba(255,255,255,0.03),
-      0 0 40px rgba(255,255,255,0.01);
-  }
-
-  .glow-strong {
-    box-shadow:
-      0 0 30px rgba(255,255,255,0.05),
-      0 0 60px rgba(255,255,255,0.02);
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .will-change-transform {
-    will-change: transform;
-  }
 }
