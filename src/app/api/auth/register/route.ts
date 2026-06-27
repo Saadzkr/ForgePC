@@ -41,9 +41,6 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
-        stats: {
-          create: {},
-        },
       },
       select: {
         id: true,
@@ -53,6 +50,10 @@ export async function POST(request: Request) {
         role: true,
         createdAt: true,
       },
+    })
+
+    await prisma.userStats.create({
+      data: { userId: user.id },
     })
 
     return NextResponse.json({ user }, { status: 201 })
