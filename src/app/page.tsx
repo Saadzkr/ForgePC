@@ -52,7 +52,7 @@ function BurgerMenu() {
             <motion.div initial={{ x: 280 }} animate={{ x: 0 }} exit={{ x: 280 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="burger-menu md:hidden">
               <div className="flex items-center justify-between mb-8">
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-                <button onClick={() => setOpen(false)} className="text-[#555] hover:text-[#eee] transition-colors">
+                <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -63,7 +63,7 @@ function BurgerMenu() {
               <Link href="/community" className="text-[0.65rem]">Community</Link>
               <Link href="/advisor" className="text-[0.65rem]">AI Advisor</Link>
               <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]">
-                <Link href="/login" className="text-[0.6rem] text-[#555]">Sign In</Link>
+                <Link href="/login" className="text-[0.6rem] text-muted-foreground">Sign In</Link>
               </div>
             </motion.div>
           </>
@@ -134,7 +134,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-[0.5rem] sm:text-[0.65rem] tracking-[0.25em] text-[#555] uppercase mb-6 sm:mb-8"
+            className="text-[0.5rem] sm:text-[0.65rem] tracking-[0.25em] text-muted-foreground uppercase mb-6 sm:mb-8"
           >
             Custom PC Configurator
           </motion.p>
@@ -160,7 +160,7 @@ function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-xs sm:text-sm md:text-base text-[#999] max-w-lg mx-auto mb-8 sm:mb-12 leading-relaxed tracking-wide px-2"
+            className="text-xs sm:text-sm md:text-base text-muted-foreground/60 max-w-lg mx-auto mb-8 sm:mb-12 leading-relaxed tracking-wide px-2"
           >
             Select from 126 premium components. Real-time compatibility checking.
             No guesswork. Just the perfect build.
@@ -172,13 +172,13 @@ function HeroSection() {
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           >
             <Link href="/builder"
-              className="glass-btn inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-3.5 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-[#eee] rounded-xl"
+              className="glass-btn inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-3.5 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
             >
               <span className="relative z-10">Start Building</span>
               <ArrowUpRight className="relative z-10 w-3 h-3 sm:w-4 sm:h-4" />
             </Link>
             <Link href="/dashboard"
-              className="glass-btn inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 text-[0.5rem] sm:text-xs tracking-[0.15em] uppercase text-[#aaa] rounded-xl"
+              className="glass-btn inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 text-[0.5rem] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/70 rounded-xl"
             >
               View Builds
             </Link>
@@ -189,7 +189,7 @@ function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.8 }}
-          className="absolute bottom-0 left-0 right-0 overflow-hidden py-3 sm:py-4 border-t border-[#1a1a1a] bg-black/50 backdrop-blur-sm"
+          className="absolute bottom-0 left-0 right-0 overflow-hidden py-3 sm:py-4 border-t border-border bg-black/50 backdrop-blur-sm"
         >
           <motion.div
             animate={{ x: [0, -1920] }}
@@ -197,8 +197,8 @@ function HeroSection() {
             className="flex gap-6 sm:gap-8 whitespace-nowrap"
           >
             {[...hardwareTicker, ...hardwareTicker].map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-2 sm:gap-3 text-[0.5rem] sm:text-[0.6rem] tracking-[0.15em] text-[#444] uppercase">
-                <span className="w-1 h-1 bg-[#333] rounded-full" />
+              <span key={i} className="inline-flex items-center gap-2 sm:gap-3 text-[0.5rem] sm:text-[0.6rem] tracking-[0.15em] text-muted-foreground/40 uppercase">
+                <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
                 {item}
               </span>
             ))}
@@ -221,10 +221,10 @@ function BentoHowItWorks() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-10 sm:mb-16"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-3 sm:mb-4">Process</p>
-            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-[#eee] leading-[1.1]">
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Process</p>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">
               Three steps to<br />
-              <span className="text-[#555]">your perfect build</span>
+              <span className="text-muted-foreground">your perfect build</span>
             </h2>
           </motion.div>
 
@@ -239,17 +239,17 @@ function BentoHowItWorks() {
               <TiltCard intensity={4}>
                 <div className="glass-panel rounded-2xl p-6 sm:p-8 md:p-12 h-full">
                   <div className="flex items-start justify-between mb-6 sm:mb-8">
-                    <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-[#555] uppercase">Step 01</span>
-                    <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-[#555]" />
+                    <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-muted-foreground uppercase">Step 01</span>
+                    <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
                   </div>
-                  <h3 className="font-display text-2xl sm:text-3xl text-[#eee] mb-3 sm:mb-4">Choose Components</h3>
-                  <p className="text-xs sm:text-sm text-[#555] leading-relaxed max-w-lg">
+                  <h3 className="font-display text-2xl sm:text-3xl text-foreground mb-3 sm:mb-4">Choose Components</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-lg">
                     Browse our curated catalog of 126 premium components across 10 categories.
                     CPUs, GPUs, motherboards, memory, storage — everything you need.
                   </p>
                   <div className="mt-6 sm:mt-8 flex flex-wrap gap-2">
                       {['CPU', 'GPU', 'RAM', 'STORAGE'].map((tag) => (
-                          <span key={tag} className="glass-sm text-[0.45rem] sm:text-[0.5rem] tracking-[0.15em] text-[#555] px-2 sm:px-3 py-1 sm:py-1.5 uppercase rounded">
+                          <span key={tag} className="glass-sm text-[0.45rem] sm:text-[0.5rem] tracking-[0.15em] text-muted-foreground px-2 sm:px-3 py-1 sm:py-1.5 uppercase rounded">
                             {tag}
                           </span>
                     ))}
@@ -269,11 +269,11 @@ function BentoHowItWorks() {
                 <TiltCard intensity={3}>
                   <div className="glass-panel rounded-2xl p-6 sm:p-8 h-full flex flex-col">
                     <div className="flex items-start justify-between mb-4 sm:mb-6">
-                      <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-[#555] uppercase">Step 02</span>
-                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#555]" />
+                      <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-muted-foreground uppercase">Step 02</span>
+                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
                     </div>
-                    <h3 className="font-display text-lg sm:text-xl text-[#eee] mb-2 sm:mb-3">Check Compatibility</h3>
-                    <p className="text-xs sm:text-sm text-[#555] leading-relaxed flex-1">Real-time validation across socket type, form factor, power draw, and clearance.</p>
+                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">Check Compatibility</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">Real-time validation across socket type, form factor, power draw, and clearance.</p>
                   </div>
                 </TiltCard>
               </motion.div>
@@ -288,11 +288,11 @@ function BentoHowItWorks() {
                 <TiltCard intensity={3}>
                   <div className="glass-panel rounded-2xl p-6 sm:p-8 h-full flex flex-col">
                     <div className="flex items-start justify-between mb-4 sm:mb-6">
-                      <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-[#555] uppercase">Step 03</span>
-                      <Share2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#555]" />
+                      <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-muted-foreground uppercase">Step 03</span>
+                      <Share2 className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
                     </div>
-                    <h3 className="font-display text-lg sm:text-xl text-[#eee] mb-2 sm:mb-3">Save & Share</h3>
-                    <p className="text-xs sm:text-sm text-[#555] leading-relaxed flex-1">Save your configuration, share with the community, or export a complete parts list.</p>
+                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">Save & Share</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">Save your configuration, share with the community, or export a complete parts list.</p>
                   </div>
                 </TiltCard>
               </motion.div>
@@ -307,7 +307,7 @@ function BentoHowItWorks() {
 function ComponentGrid() {
   return (
     <ParallaxLayer speed={-0.1}>
-      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a]">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -316,8 +316,8 @@ function ComponentGrid() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-10 sm:mb-16"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-3 sm:mb-4">Catalog</p>
-            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-[#eee] leading-[1.1]">126 components.<br /><span className="text-[#555]">10 categories. Endless possibilities.</span></h2>
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Catalog</p>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">126 components.<br /><span className="text-muted-foreground">10 categories. Endless possibilities.</span></h2>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
@@ -333,9 +333,9 @@ function ComponentGrid() {
                 >
                   <TiltCard intensity={5}>
                     <div className="glass-panel rounded-xl p-4 sm:p-5 h-full transition-all duration-300 group-hover:border-[rgba(255,255,255,0.2)]">
-                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#555] mb-3 sm:mb-4 group-hover:text-[#eee] transition-colors duration-300" />
-                      <p className="text-[0.6rem] sm:text-xs text-[#888] mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-[#ccc]">{cat.label}</p>
-                      <p className="text-[0.45rem] sm:text-[0.55rem] text-[#444] transition-colors duration-300">{cat.count} options</p>
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground mb-3 sm:mb-4 group-hover:text-foreground transition-colors duration-300" />
+                      <p className="text-[0.6rem] sm:text-xs text-muted-foreground/60 mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-muted-foreground/80">{cat.label}</p>
+                      <p className="text-[0.45rem] sm:text-[0.55rem] text-muted-foreground/40 transition-colors duration-300">{cat.count} options</p>
                     </div>
                   </TiltCard>
                 </motion.div>
@@ -380,7 +380,7 @@ function QuickConfig() {
 
   return (
     <ParallaxLayer speed={0.05}>
-      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a]">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -389,9 +389,9 @@ function QuickConfig() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-8 sm:mb-12"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-3 sm:mb-4">Quick Config</p>
-            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-[#eee] leading-[1.1]">
-              Estimate your build.<br /><span className="text-[#555]">Adjust tiers in real time.</span>
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Quick Config</p>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">
+              Estimate your build.<br /><span className="text-muted-foreground">Adjust tiers in real time.</span>
             </h2>
           </motion.div>
 
@@ -408,16 +408,16 @@ function QuickConfig() {
                   <TiltCard intensity={4}>
                     <div className="glass-panel rounded-xl p-4 sm:p-5">
                       <div className="flex items-center gap-2 mb-3">
-                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#555]" />
-                        <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-[#555] uppercase">{key}</span>
+                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                        <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-muted-foreground uppercase">{key}</span>
                       </div>
                       <div className="flex flex-col gap-1.5">
                         {opts.map((opt, i) => (
                           <button key={opt.label} onClick={() => setSelected(prev => ({ ...prev, [key]: i }))}
                             className={`text-left px-3 py-2 rounded-lg text-[0.5rem] sm:text-[0.55rem] tracking-wide transition-all duration-200 ${
                               selected[key] === i
-                                ? 'bg-white/10 border border-white/20 text-[#eee]'
-                                : 'bg-white/[0.02] border border-transparent text-[#555] hover:bg-white/[0.04] hover:text-[#888]'
+                                ? 'bg-white/10 border border-white/20 text-foreground'
+                                : 'bg-white/[0.02] border border-transparent text-muted-foreground hover:bg-white/[0.04] hover:text-muted-foreground/60'
                             }`}
                           >
                             <span className="flex items-center justify-between">
@@ -442,14 +442,14 @@ function QuickConfig() {
             className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel rounded-xl p-4 sm:p-6"
           >
             <div className="flex items-center gap-3">
-              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#555]" />
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               <div>
-                <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] text-[#555] uppercase">Estimated Total</p>
-                <p className="font-display text-2xl sm:text-3xl text-[#eee] tabular-nums">${total.toLocaleString()}</p>
+                <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] text-muted-foreground uppercase">Estimated Total</p>
+                <p className="font-display text-2xl sm:text-3xl text-foreground tabular-nums">${total.toLocaleString()}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[0.45rem] sm:text-[0.5rem] text-[#555]">+ case, PSU, cooling &amp; OS</span>
+              <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">+ case, PSU, cooling &amp; OS</span>
               <Link href="/builder"
                 className="glass-btn-primary text-[0.5rem] sm:text-[0.55rem] px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg flex items-center gap-1.5"
               >
@@ -474,7 +474,7 @@ function StatsSection() {
 
   return (
     <ParallaxLayer speed={0.1}>
-      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-border relative overflow-hidden">
         <motion.div className="absolute inset-0 bg-grid opacity-[0.15]"
           animate={{ opacity: [0.15, 0.08, 0.15] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
@@ -485,7 +485,7 @@ function StatsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true, margin: '-100px' }}
-            className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-10 sm:mb-16 text-center"
+            className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-10 sm:mb-16 text-center"
           >
             By the Numbers
           </motion.p>
@@ -498,13 +498,13 @@ function StatsSection() {
                 viewport={{ once: true, margin: '-100px' }}
                 className="text-center group"
               >
-                <motion.p className="font-display text-4xl sm:text-5xl md:text-6xl text-[#eee] mb-1 sm:mb-2 tabular-nums"
+                <motion.p className="font-display text-4xl sm:text-5xl md:text-6xl text-foreground mb-1 sm:mb-2 tabular-nums"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 10 }}
                 >
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </motion.p>
-                <p className="text-[0.55rem] sm:text-xs text-[#555] tracking-wider uppercase">{stat.label}</p>
+                <p className="text-[0.55rem] sm:text-xs text-muted-foreground tracking-wider uppercase">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -516,7 +516,7 @@ function StatsSection() {
 
 function CTASection() {
   return (
-    <section className="bg-black py-20 sm:py-28 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
+    <section className="bg-black py-20 sm:py-28 px-4 sm:px-6 border-t border-border relative overflow-hidden">
       <div className="absolute inset-0 bg-grid opacity-[0.08]" />
       <div className="absolute inset-0 bg-noise" />
       <motion.div
@@ -533,16 +533,16 @@ function CTASection() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-4 sm:mb-6">Get Started</p>
-          <h2 className="font-display text-3xl sm:text-5xl md:text-7xl text-[#eee] mb-4 sm:mb-6 leading-[1.1]">
-            Ready to build<br /><span className="text-[#555]">something extraordinary?</span>
+          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-4 sm:mb-6">Get Started</p>
+          <h2 className="font-display text-3xl sm:text-5xl md:text-7xl text-foreground mb-4 sm:mb-6 leading-[1.1]">
+            Ready to build<br /><span className="text-muted-foreground">something extraordinary?</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[#555] mb-8 sm:mb-10 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-8 sm:mb-10 max-w-md mx-auto leading-relaxed">
             Open the configurator, select your components, and see real-time compatibility.
             Your dream PC is a few clicks away.
           </p>
           <Link href="/builder"
-            className="glass-btn inline-flex items-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-[#eee] rounded-xl"
+            className="glass-btn inline-flex items-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
           >
             <span className="relative z-10">Start Building</span>
             <ArrowUpRight className="relative z-10 w-3 h-3 sm:w-4 sm:h-4" />
@@ -555,24 +555,24 @@ function CTASection() {
 
 export default function HomePage() {
   return (
-    <main className="bg-black text-[#eee] overflow-x-hidden">
+    <main className="bg-black text-foreground overflow-x-hidden">
       <HeroSection />
       <BentoHowItWorks />
       <ComponentGrid />
       <QuickConfig />
       <StatsSection />
       <CTASection />
-      <footer className="border-t border-[#1a1a1a] py-6 sm:py-8 px-4 sm:px-6">
+      <footer className="border-t border-border py-6 sm:py-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-3">
             <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-            <span className="text-[0.4rem] sm:text-[0.45rem] text-[#333] tracking-widest uppercase hidden sm:inline">Custom Computer Builder</span>
+            <span className="text-[0.4rem] sm:text-[0.45rem] text-muted-foreground/30 tracking-widest uppercase hidden sm:inline">Custom Computer Builder</span>
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="/builder" className="text-[0.45rem] sm:text-[0.5rem] text-[#444] tracking-wider uppercase hover:text-[#888] transition-colors">Builder</Link>
-            <Link href="/dashboard" className="text-[0.45rem] sm:text-[0.5rem] text-[#444] tracking-wider uppercase hover:text-[#888] transition-colors">Dashboard</Link>
-            <Link href="/community" className="text-[0.45rem] sm:text-[0.5rem] text-[#444] tracking-wider uppercase hover:text-[#888] transition-colors">Community</Link>
-            <Link href="/login" className="text-[0.45rem] sm:text-[0.5rem] text-[#444] tracking-wider uppercase hover:text-[#888] transition-colors">Sign In</Link>
+            <Link href="/builder" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Builder</Link>
+            <Link href="/dashboard" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Dashboard</Link>
+            <Link href="/community" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Community</Link>
+            <Link href="/login" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Sign In</Link>
           </div>
         </div>
       </footer>

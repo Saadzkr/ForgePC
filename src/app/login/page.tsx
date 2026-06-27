@@ -33,16 +33,16 @@ export default function LoginPage() {
           <Link href="/" className="logo-text font-display text-xl block mb-2">
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
-          <p className="text-[0.6rem] tracking-[0.25em] text-[#555] uppercase">Sign In</p>
+          <p className="text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase">Sign In</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[0.55rem] tracking-wider uppercase text-[#555] block mb-1.5">Email</label>
+            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">Email</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder="user@domain.com" required />
           </div>
           <div>
-            <label className="text-[0.55rem] tracking-wider uppercase text-[#555] block mb-1.5">Password</label>
+            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">Password</label>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder="••••••••" required />
           </div>
 
@@ -63,9 +63,9 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 pt-4 text-center glass-divider">
-          <p className="text-xs text-[#555]">
+          <p className="text-xs text-muted-foreground">
             No account?{' '}
-            <Link href="/signup" className="text-[#eee] underline underline-offset-4 hover:text-white transition-colors">
+            <Link href="/signup" className="text-foreground underline underline-offset-4 hover:text-white transition-colors">
               Create one
             </Link>
           </p>
