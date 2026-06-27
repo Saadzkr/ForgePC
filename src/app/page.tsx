@@ -92,20 +92,16 @@ function ParallaxLayer({ children, speed = 0.3, className = '' }: { children: Re
 
 function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.92])
-  const heroY = useTransform(scrollYProgress, [0, 0.6], [0, 80])
 
   return (
-    <section ref={sectionRef} className="relative h-[180vh]">
-      <motion.div className="fixed inset-0 z-0" style={{ opacity, scale }}>
+    <section ref={sectionRef} className="relative h-screen">
+      <div className="absolute inset-0 z-0">
         <GLSLHills />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/70 pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-grid opacity-[0.4]" />
         <div className="absolute inset-0 bg-noise" />
-      </motion.div>
+      </div>
 
       <div className="relative z-10 h-screen flex flex-col items-center justify-center px-4 sm:px-6">
         <nav className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 sm:px-8 py-6">
@@ -132,13 +128,7 @@ function HeroSection() {
           <div className="w-[800px] h-[800px] rounded-full bg-gradient-radial from-white/[0.03] to-transparent" />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-center max-w-5xl mx-auto relative px-2"
-          style={{ y: heroY }}
-        >
+        <div className="text-center max-w-5xl mx-auto relative px-2">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -192,7 +182,7 @@ function HeroSection() {
               View Builds
             </Link>
           </motion.div>
-        </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -221,7 +211,7 @@ function HeroSection() {
 function BentoHowItWorks() {
   return (
     <ParallaxLayer speed={0.15}>
-      <section className="bg-black py-20 sm:py-32 px-4 sm:px-6">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -316,7 +306,7 @@ function BentoHowItWorks() {
 function ComponentGrid() {
   return (
     <ParallaxLayer speed={-0.1}>
-      <section className="bg-black py-20 sm:py-32 px-4 sm:px-6 border-t border-[#1a1a1a]">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a]">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -367,7 +357,7 @@ function StatsSection() {
 
   return (
     <ParallaxLayer speed={0.1}>
-      <section className="bg-black py-20 sm:py-32 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
         <motion.div className="absolute inset-0 bg-grid opacity-[0.15]"
           animate={{ opacity: [0.15, 0.08, 0.15] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
@@ -409,7 +399,7 @@ function StatsSection() {
 
 function CTASection() {
   return (
-    <section className="bg-black py-32 sm:py-48 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
+    <section className="bg-black py-20 sm:py-28 px-4 sm:px-6 border-t border-[#1a1a1a] relative overflow-hidden">
       <div className="absolute inset-0 bg-grid opacity-[0.08]" />
       <div className="absolute inset-0 bg-noise" />
       <motion.div
