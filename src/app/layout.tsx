@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Inter, JetBrains_Mono } from 'next/font/google'
+import { Playfair_Display, Inter, JetBrains_Mono, Lavishly_Yours } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 
@@ -22,6 +22,14 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
   preload: false,
+})
+
+const lavishlyYours = Lavishly_Yours({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-script',
+  display: 'swap',
+  preload: true,
 })
 
 export const viewport: Viewport = {
@@ -56,7 +64,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable} ${lavishlyYours.variable}`}>
       <head>
         <link rel="preconnect" href="https://my.spline.design" />
       </head>

@@ -160,7 +160,7 @@ function HeroSection() {
               initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
               animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
               transition={{ duration: 1.2, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-              className="block text-highlight-strong font-black"
+              className="block text-highlight-strong font-script"
             >
               Your Machine
             </motion.span>

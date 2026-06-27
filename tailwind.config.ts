@@ -47,6 +47,7 @@ const config: Config = {
         sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
         display: ['var(--font-display)', 'Playfair Display', 'serif'],
+        script: ['var(--font-script)', 'Lavishly Yours', 'cursive'],
       },
       backgroundImage: {
         'grid': 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)',
