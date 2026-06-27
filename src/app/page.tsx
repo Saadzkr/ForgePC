@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence, type MotionValue } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -71,14 +71,84 @@ function BurgerMenu() {
   )
 }
 
-function SplineScene() {
+function PCScene({ progress }: { progress: MotionValue<number> }) {
+  const startWireframe = useTransform(progress, [0, 0.4], [0.15, 0])
+  const finishOpacity = useTransform(progress, [0.2, 0.6], [0, 1])
+  const frameGlow = useTransform(progress, [0, 0.5], ['rgba(255,255,255,0.04)', 'rgba(255,107,53,0.2)'])
+  const glowIntensity = useTransform(progress, [0, 0.5], [0, 0.6])
+  const powerLed = useTransform(progress, [0.3, 0.6], [0.1, 0.6])
+
   return (
-    <iframe
-      src="https://my.spline.design/thepc-rya8Xlf5CUM12ddp292Hz84u/"
-      className="w-full h-full border-none"
-      allow="autoplay; fullscreen"
-      title="Forge PC 3D Model"
-    />
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+      <svg viewBox="0 0 520 620" className="w-[50vw] max-w-[520px] h-auto" fill="none">
+        <filter id="pcShadow"><feGaussianBlur in="SourceGraphic" stdDeviation="8" /></filter>
+        <radialGradient id="pcGlow" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="rgba(255,107,53,0.06)" />
+          <stop offset="100%" stopColor="rgba(255,107,53,0)" />
+        </radialGradient>
+
+        <rect x="60" y="20" width="400" height="580" rx="16" fill="rgba(0,0,0,0.5)" filter="url(#pcShadow)" />
+        <motion.rect x="50" y="10" width="420" height="600" rx="12" fill="rgba(10,10,10,0.95)" style={{ stroke: frameGlow }} strokeWidth="1.5" />
+        <rect x="65" y="30" width="390" height="460" rx="8" fill="rgba(5,5,5,0.9)" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" />
+
+        <motion.g style={{ opacity: startWireframe }} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 3">
+          <rect x="180" y="80" width="160" height="160" rx="6" />
+          <rect x="220" y="120" width="80" height="80" rx="4" />
+          <rect x="120" y="270" width="280" height="50" rx="4" />
+          <rect x="140" y="278" width="80" height="34" rx="2" />
+          <rect x="360" y="100" width="12" height="120" rx="2" />
+          <rect x="378" y="100" width="12" height="120" rx="2" />
+          <rect x="396" y="100" width="12" height="120" rx="2" />
+          <rect x="414" y="100" width="12" height="120" rx="2" />
+          <rect x="140" y="430" width="240" height="50" rx="4" />
+          <circle cx="110" cy="360" r="40" />
+          <circle cx="410" cy="360" r="40" />
+          <rect x="280" y="18" width="80" height="6" rx="3" />
+          <circle cx="290" cy="21" r="2" />
+          <circle cx="302" cy="21" r="2" />
+          <line x1="260" y1="430" x2="260" y2="480" />
+          <line x1="280" y1="430" x2="280" y2="480" />
+        </motion.g>
+
+        <motion.g style={{ opacity: finishOpacity }}>
+          <rect x="200" y="100" width="120" height="120" rx="8" fill="rgba(60,60,60,0.4)" stroke="rgba(100,180,255,0.15)" strokeWidth="1" />
+          <line x1="220" y1="110" x2="220" y2="210" stroke="rgba(100,180,255,0.06)" strokeWidth="0.5" />
+          <line x1="240" y1="110" x2="240" y2="210" stroke="rgba(100,180,255,0.06)" strokeWidth="0.5" />
+          <line x1="260" y1="110" x2="260" y2="210" stroke="rgba(100,180,255,0.06)" strokeWidth="0.5" />
+          <line x1="280" y1="110" x2="280" y2="210" stroke="rgba(100,180,255,0.06)" strokeWidth="0.5" />
+          <line x1="300" y1="110" x2="300" y2="210" stroke="rgba(100,180,255,0.06)" strokeWidth="0.5" />
+          <circle cx="260" cy="160" r="30" fill="rgba(100,180,255,0.06)" stroke="rgba(100,180,255,0.12)" strokeWidth="0.5" />
+
+          <rect x="130" y="275" width="260" height="45" rx="4" fill="rgba(40,40,40,0.6)" stroke="rgba(255,107,53,0.3)" strokeWidth="1" />
+          <circle cx="200" cy="297" r="12" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.15)" strokeWidth="0.5" />
+          <circle cx="240" cy="297" r="12" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.15)" strokeWidth="0.5" />
+          <circle cx="280" cy="297" r="12" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.15)" strokeWidth="0.5" />
+          <rect x="135" y="275" width="250" height="3" rx="1.5" fill="rgba(255,107,53,0.25)" />
+
+          <rect x="362" y="105" width="8" height="110" rx="1" fill="rgba(0,200,255,0.25)" />
+          <rect x="380" y="105" width="8" height="110" rx="1" fill="rgba(0,200,255,0.18)" />
+          <rect x="398" y="105" width="8" height="110" rx="1" fill="rgba(0,200,255,0.12)" />
+          <rect x="416" y="105" width="8" height="110" rx="1" fill="rgba(0,200,255,0.08)" />
+          <rect x="360" y="102" width="13" height="4" rx="1" fill="rgba(0,200,255,0.4)" />
+          <rect x="378" y="102" width="13" height="4" rx="1" fill="rgba(0,200,255,0.3)" />
+          <rect x="396" y="102" width="13" height="4" rx="1" fill="rgba(0,200,255,0.2)" />
+          <rect x="414" y="102" width="13" height="4" rx="1" fill="rgba(0,200,255,0.15)" />
+
+          <rect x="150" y="435" width="220" height="45" rx="4" fill="rgba(30,30,30,0.5)" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
+          <circle cx="260" cy="457" r="12" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
+
+          <circle cx="110" cy="365" r="35" fill="rgba(255,107,53,0.04)" stroke="rgba(255,107,53,0.12)" strokeWidth="0.5" />
+          <circle cx="110" cy="365" r="20" fill="none" stroke="rgba(255,107,53,0.06)" strokeWidth="0.5" strokeDasharray="4 4" />
+          <circle cx="410" cy="365" r="35" fill="rgba(255,107,53,0.04)" stroke="rgba(255,107,53,0.12)" strokeWidth="0.5" />
+          <circle cx="410" cy="365" r="20" fill="none" stroke="rgba(255,107,53,0.06)" strokeWidth="0.5" strokeDasharray="4 4" />
+
+          <rect x="70" y="40" width="380" height="440" rx="6" stroke="rgba(255,107,53,0.06)" strokeWidth="0.5" />
+        </motion.g>
+
+        <motion.rect x="50" y="10" width="420" height="600" rx="12" fill="url(#pcGlow)" style={{ opacity: glowIntensity }} />
+        <motion.circle cx="260" cy="580" r="4" fill="rgba(255,107,53,0.3)" style={{ opacity: powerLed }} />
+      </svg>
+    </div>
   )
 }
 
@@ -110,7 +180,7 @@ function HeroSection() {
   return (
     <section ref={sectionRef} className="relative h-[180vh]">
       <motion.div className="fixed inset-0 z-0" style={{ opacity, scale }}>
-        <SplineScene />
+        <PCScene progress={scrollYProgress} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/70 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none" />
         <div className="absolute inset-0 bg-grid opacity-[0.4]" />
