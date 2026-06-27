@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   Cpu, CheckCircle, Share2, ArrowUpRight, HardDrive, Monitor,
-  MemoryStick, Fan, Box, Power, Wifi, Disc, Activity, X
+  MemoryStick, Fan, Box, Power, Wifi, Disc, Activity, X,
+  Gauge, Zap, DollarSign, Plus, Minus
 } from 'lucide-react'
 import { GLSLHills } from '@/components/ui/glsl-hills'
 import TiltCard from '@/components/effects/TiltCard'
@@ -347,6 +348,122 @@ function ComponentGrid() {
   )
 }
 
+function QuickConfig() {
+  const tiers = {
+    CPU: [
+      { label: 'Ryzen 5', price: 200, icon: Cpu },
+      { label: 'Ryzen 7', price: 350, icon: Cpu },
+      { label: 'Ryzen 9', price: 550, icon: Cpu },
+    ],
+    GPU: [
+      { label: 'RTX 4060', price: 300, icon: Monitor },
+      { label: 'RTX 4070', price: 550, icon: Monitor },
+      { label: 'RTX 4090', price: 1600, icon: Monitor },
+    ],
+    RAM: [
+      { label: '16 GB', price: 80, icon: MemoryStick },
+      { label: '32 GB', price: 150, icon: MemoryStick },
+      { label: '64 GB', price: 280, icon: MemoryStick },
+    ],
+    Storage: [
+      { label: '1 TB SSD', price: 100, icon: Disc },
+      { label: '2 TB SSD', price: 180, icon: Disc },
+      { label: '4 TB SSD', price: 350, icon: Disc },
+    ],
+  }
+
+  const [selected, setSelected] = useState<Record<string, number>>({
+    CPU: 0, GPU: 0, RAM: 0, Storage: 0,
+  })
+
+  const total = Object.entries(tiers).reduce((sum, [key, opts]) => sum + opts[selected[key]].price, 0)
+
+  return (
+    <ParallaxLayer speed={0.05}>
+      <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-[#1a1a1a]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: '-100px' }}
+            className="mb-8 sm:mb-12"
+          >
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-3 sm:mb-4">Quick Config</p>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-[#eee] leading-[1.1]">
+              Estimate your build.<br /><span className="text-[#555]">Adjust tiers in real time.</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            {Object.entries(tiers).map(([key, opts]) => {
+              const Icon = opts[0].icon
+              return (
+                <motion.div key={key}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                >
+                  <TiltCard intensity={4}>
+                    <div className="glass-panel rounded-xl p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#555]" />
+                        <span className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.2em] text-[#555] uppercase">{key}</span>
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        {opts.map((opt, i) => (
+                          <button key={opt.label} onClick={() => setSelected(prev => ({ ...prev, [key]: i }))}
+                            className={`text-left px-3 py-2 rounded-lg text-[0.5rem] sm:text-[0.55rem] tracking-wide transition-all duration-200 ${
+                              selected[key] === i
+                                ? 'bg-white/10 border border-white/20 text-[#eee]'
+                                : 'bg-white/[0.02] border border-transparent text-[#555] hover:bg-white/[0.04] hover:text-[#888]'
+                            }`}
+                          >
+                            <span className="flex items-center justify-between">
+                              <span>{opt.label}</span>
+                              <span className="text-[0.45rem] opacity-60">+${opt.price}</span>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </TiltCard>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel rounded-xl p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-3">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#555]" />
+              <div>
+                <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] text-[#555] uppercase">Estimated Total</p>
+                <p className="font-display text-2xl sm:text-3xl text-[#eee] tabular-nums">${total.toLocaleString()}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[0.45rem] sm:text-[0.5rem] text-[#555]">+ case, PSU, cooling &amp; OS</span>
+              <Link href="/builder"
+                className="glass-btn-primary text-[0.5rem] sm:text-[0.55rem] px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg flex items-center gap-1.5"
+              >
+                <Zap className="w-3 h-3" />
+                Full Builder
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </ParallaxLayer>
+  )
+}
+
 function StatsSection() {
   const stats = [
     { value: 126, suffix: '+', label: 'Components' },
@@ -442,6 +559,7 @@ export default function HomePage() {
       <HeroSection />
       <BentoHowItWorks />
       <ComponentGrid />
+      <QuickConfig />
       <StatsSection />
       <CTASection />
       <footer className="border-t border-[#1a1a1a] py-6 sm:py-8 px-4 sm:px-6">
