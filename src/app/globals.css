@@ -214,8 +214,10 @@
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      0 0 20px rgba(59, 130, 246, 0.15),
-      0 0 40px rgba(168, 85, 247, 0.1);
+      0 0 20px rgba(59, 130, 246, 0.3),
+      0 0 40px rgba(59, 130, 246, 0.15),
+      0 0 60px rgba(168, 85, 247, 0.2),
+      0 0 80px rgba(168, 85, 247, 0.1);
   }
 
   .glass-panel {
@@ -254,7 +256,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 0 12px rgba(212,175,55,0.25)) drop-shadow(0 0 30px rgba(212,175,55,0.1));
+    filter: drop-shadow(0 0 20px rgba(212,175,55,0.35)) drop-shadow(0 0 50px rgba(212,175,55,0.15));
+
   }
 
   @keyframes shimmer-text {
@@ -471,8 +474,10 @@
     box-shadow:
       0 8px 24px rgba(255, 255, 255, 0.05),
       inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      0 0 20px rgba(59, 130, 246, 0.15),
-      0 0 40px rgba(168, 85, 247, 0.1);
+      0 0 20px rgba(59, 130, 246, 0.3),
+      0 0 40px rgba(59, 130, 246, 0.15),
+      0 0 60px rgba(168, 85, 247, 0.2),
+      0 0 80px rgba(168, 85, 247, 0.1);
   }
 
   /* Glass button — small / subtle */
@@ -497,8 +502,8 @@
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow:
-      0 0 12px rgba(59, 130, 246, 0.1),
-      0 0 24px rgba(168, 85, 247, 0.06);
+      0 0 12px rgba(59, 130, 246, 0.2),
+      0 0 24px rgba(168, 85, 247, 0.12);
   }
 
   /* Glass input field */
