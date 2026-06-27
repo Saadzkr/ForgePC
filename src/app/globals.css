@@ -248,13 +248,13 @@
   }
 
   .text-highlight-strong {
-    background: linear-gradient(135deg, #fff 0%, #888 30%, #fff 50%, #888 70%, #fff 100%);
+    background: linear-gradient(135deg, #D4AF37 0%, #FFDF00 30%, #F9D976 50%, #D4AF37 70%, #B8860B 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: shimmer-text 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 40px rgba(255,255,255,0.15)) drop-shadow(0 0 80px rgba(255,255,255,0.05));
+    filter: drop-shadow(0 0 30px rgba(212,175,55,0.3)) drop-shadow(0 0 60px rgba(212,175,55,0.15));
   }
 
   @keyframes shimmer-text {

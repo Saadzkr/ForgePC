@@ -152,7 +152,7 @@ function HeroSection() {
               initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
               animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
               transition={{ duration: 1.2, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="block"
+              className="block text-white"
             >
               Forge
             </motion.span>
@@ -160,7 +160,7 @@ function HeroSection() {
               initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
               animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
               transition={{ duration: 1.2, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-              className="block text-highlight-strong"
+              className="block text-highlight-strong font-black"
             >
               Your Machine
             </motion.span>
@@ -169,7 +169,7 @@ function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-xs sm:text-sm md:text-base text-[#555] max-w-lg mx-auto mb-8 sm:mb-12 leading-relaxed tracking-wide px-2"
+            className="text-xs sm:text-sm md:text-base text-[#999] max-w-lg mx-auto mb-8 sm:mb-12 leading-relaxed tracking-wide px-2"
           >
             Select from 126 premium components. Real-time compatibility checking.
             No guesswork. Just the perfect build.
