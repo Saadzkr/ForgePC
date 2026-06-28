@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Inter, JetBrains_Mono, Lavishly_Yours } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import Navbar from '@/components/ui/navbar'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -69,7 +70,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://my.spline.design" />
       </head>
       <body className="bg-black text-[#eee] antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar />
+          <div className="pt-14 sm:pt-16">{children}</div>
+        </Providers>
       </body>
     </html>
   )

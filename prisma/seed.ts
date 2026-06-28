@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client'
+import { INTEL_CPUS, AMD_CPUS, buildCpu } from './data/cpus'
+import { NVIDIA_GPUS, AMD_GPUS, buildGpu } from './data/gpus'
 
 const prisma = new PrismaClient()
 
@@ -11,59 +13,14 @@ type ComponentInput = {
   wattage: number
   specs: Record<string, unknown>
   imageUrl: string | null
+  inStock?: boolean
 }
 
 const components: ComponentInput[] = [
-  // ─── AMD CPUs (AM5) ───
-  { name: 'AMD Ryzen 5 7500F', category: 'CPU', brand: 'AMD', model: '7500F', price: 179, wattage: 65, specs: { cores: 6, threads: 12, baseClock: 3.7, boostClock: 5.0, socket: 'AM5', tdp: 65, performanceScore: 78 }, imageUrl: null },
-  { name: 'AMD Ryzen 5 7600', category: 'CPU', brand: 'AMD', model: '7600', price: 199, wattage: 65, specs: { cores: 6, threads: 12, baseClock: 3.8, boostClock: 5.1, socket: 'AM5', tdp: 65, performanceScore: 80 }, imageUrl: null },
-  { name: 'AMD Ryzen 5 7600X', category: 'CPU', brand: 'AMD', model: '7600X', price: 229, wattage: 105, specs: { cores: 6, threads: 12, baseClock: 4.7, boostClock: 5.3, socket: 'AM5', tdp: 105, performanceScore: 83 }, imageUrl: null },
-  { name: 'AMD Ryzen 7 7700', category: 'CPU', brand: 'AMD', model: '7700', price: 329, wattage: 65, specs: { cores: 8, threads: 16, baseClock: 3.8, boostClock: 5.3, socket: 'AM5', tdp: 65, performanceScore: 86 }, imageUrl: null },
-  { name: 'AMD Ryzen 7 7700X', category: 'CPU', brand: 'AMD', model: '7700X', price: 359, wattage: 105, specs: { cores: 8, threads: 16, baseClock: 4.5, boostClock: 5.4, socket: 'AM5', tdp: 105, performanceScore: 89 }, imageUrl: null },
-  { name: 'AMD Ryzen 7 7800X3D', category: 'CPU', brand: 'AMD', model: '7800X3D', price: 449, wattage: 120, specs: { cores: 8, threads: 16, baseClock: 4.2, boostClock: 5.0, socket: 'AM5', tdp: 120, l3Cache: 96, performanceScore: 95 }, imageUrl: null },
-  { name: 'AMD Ryzen 9 7900', category: 'CPU', brand: 'AMD', model: '7900', price: 549, wattage: 65, specs: { cores: 12, threads: 24, baseClock: 3.7, boostClock: 5.4, socket: 'AM5', tdp: 65, performanceScore: 90 }, imageUrl: null },
-  { name: 'AMD Ryzen 9 7900X', category: 'CPU', brand: 'AMD', model: '7900X', price: 599, wattage: 170, specs: { cores: 12, threads: 24, baseClock: 4.7, boostClock: 5.6, socket: 'AM5', tdp: 170, performanceScore: 93 }, imageUrl: null },
-  { name: 'AMD Ryzen 9 7950X', category: 'CPU', brand: 'AMD', model: '7950X', price: 699, wattage: 170, specs: { cores: 16, threads: 32, baseClock: 4.5, boostClock: 5.7, socket: 'AM5', tdp: 170, performanceScore: 98 }, imageUrl: null },
-  { name: 'AMD Ryzen 9 7950X3D', category: 'CPU', brand: 'AMD', model: '7950X3D', price: 799, wattage: 120, specs: { cores: 16, threads: 32, baseClock: 4.2, boostClock: 5.7, socket: 'AM5', tdp: 120, l3Cache: 128, performanceScore: 99 }, imageUrl: null },
-
-  // ─── AMD CPUs (AM4) ───
-  { name: 'AMD Ryzen 5 5600', category: 'CPU', brand: 'AMD', model: '5600', price: 129, wattage: 65, specs: { cores: 6, threads: 12, baseClock: 3.5, boostClock: 4.4, socket: 'AM4', tdp: 65, performanceScore: 72 }, imageUrl: null },
-  { name: 'AMD Ryzen 5 5600X', category: 'CPU', brand: 'AMD', model: '5600X', price: 149, wattage: 65, specs: { cores: 6, threads: 12, baseClock: 3.7, boostClock: 4.6, socket: 'AM4', tdp: 65, performanceScore: 76 }, imageUrl: null },
-  { name: 'AMD Ryzen 7 5700X3D', category: 'CPU', brand: 'AMD', model: '5700X3D', price: 249, wattage: 105, specs: { cores: 8, threads: 16, baseClock: 3.0, boostClock: 4.1, socket: 'AM4', tdp: 105, l3Cache: 96, performanceScore: 84 }, imageUrl: null },
-  { name: 'AMD Ryzen 7 5800X3D', category: 'CPU', brand: 'AMD', model: '5800X3D', price: 319, wattage: 105, specs: { cores: 8, threads: 16, baseClock: 3.4, boostClock: 4.5, socket: 'AM4', tdp: 105, l3Cache: 96, performanceScore: 88 }, imageUrl: null },
-  { name: 'AMD Ryzen 9 5950X', category: 'CPU', brand: 'AMD', model: '5950X', price: 499, wattage: 105, specs: { cores: 16, threads: 32, baseClock: 3.4, boostClock: 4.9, socket: 'AM4', tdp: 105, performanceScore: 93 }, imageUrl: null },
-
-  // ─── Intel CPUs (LGA1700) ───
-  { name: 'Intel Core i3-14100', category: 'CPU', brand: 'Intel', model: '14100', price: 129, wattage: 60, specs: { cores: 4, threads: 8, baseClock: 3.5, boostClock: 4.7, socket: 'LGA1700', tdp: 60, performanceScore: 68 }, imageUrl: null },
-  { name: 'Intel Core i3-13100', category: 'CPU', brand: 'Intel', model: '13100', price: 114, wattage: 60, specs: { cores: 4, threads: 8, baseClock: 3.4, boostClock: 4.5, socket: 'LGA1700', tdp: 60, performanceScore: 66 }, imageUrl: null },
-  { name: 'Intel Core i5-14400', category: 'CPU', brand: 'Intel', model: '14400', price: 219, wattage: 65, specs: { cores: 10, threads: 16, baseClock: 2.5, boostClock: 4.7, socket: 'LGA1700', tdp: 65, performanceScore: 78 }, imageUrl: null },
-  { name: 'Intel Core i5-14600K', category: 'CPU', brand: 'Intel', model: '14600K', price: 319, wattage: 125, specs: { cores: 14, threads: 20, baseClock: 3.5, boostClock: 5.3, socket: 'LGA1700', tdp: 125, performanceScore: 88 }, imageUrl: null },
-  { name: 'Intel Core i5-13600K', category: 'CPU', brand: 'Intel', model: '13600K', price: 289, wattage: 125, specs: { cores: 14, threads: 20, baseClock: 3.5, boostClock: 5.1, socket: 'LGA1700', tdp: 125, performanceScore: 86 }, imageUrl: null },
-  { name: 'Intel Core i7-14700K', category: 'CPU', brand: 'Intel', model: '14700K', price: 409, wattage: 125, specs: { cores: 20, threads: 28, baseClock: 3.4, boostClock: 5.6, socket: 'LGA1700', tdp: 125, performanceScore: 92 }, imageUrl: null },
-  { name: 'Intel Core i7-13700K', category: 'CPU', brand: 'Intel', model: '13700K', price: 379, wattage: 125, specs: { cores: 16, threads: 24, baseClock: 3.4, boostClock: 5.4, socket: 'LGA1700', tdp: 125, performanceScore: 90 }, imageUrl: null },
-  { name: 'Intel Core i9-14900K', category: 'CPU', brand: 'Intel', model: '14900K', price: 589, wattage: 125, specs: { cores: 24, threads: 32, baseClock: 3.2, boostClock: 6.0, socket: 'LGA1700', tdp: 125, performanceScore: 97 }, imageUrl: null },
-  { name: 'Intel Core i9-14900KS', category: 'CPU', brand: 'Intel', model: '14900KS', price: 699, wattage: 150, specs: { cores: 24, threads: 32, baseClock: 3.2, boostClock: 6.2, socket: 'LGA1700', tdp: 150, performanceScore: 99 }, imageUrl: null },
-  { name: 'Intel Core i9-13900K', category: 'CPU', brand: 'Intel', model: '13900K', price: 549, wattage: 125, specs: { cores: 24, threads: 32, baseClock: 3.0, boostClock: 5.8, socket: 'LGA1700', tdp: 125, performanceScore: 96 }, imageUrl: null },
-
-  // ─── NVIDIA GPUs ───
-  { name: 'NVIDIA RTX 4060', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4060', price: 299, wattage: 115, specs: { vram: 8, memoryType: 'GDDR6', boostClock: 2.46, length: 240, powerDraw: 115, performanceScore: 68, fps1080p: 105, fps1440p: 75, fps4K: 40 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4060 Ti 8GB', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4060 Ti', price: 399, wattage: 160, specs: { vram: 8, memoryType: 'GDDR6X', boostClock: 2.54, length: 245, powerDraw: 160, performanceScore: 76, fps1080p: 120, fps1440p: 88, fps4K: 48 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4060 Ti 16GB', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4060 Ti 16GB', price: 439, wattage: 165, specs: { vram: 16, memoryType: 'GDDR6X', boostClock: 2.54, length: 245, powerDraw: 165, performanceScore: 77, fps1080p: 122, fps1440p: 90, fps4K: 49 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4070', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4070', price: 549, wattage: 200, specs: { vram: 12, memoryType: 'GDDR6X', boostClock: 2.48, length: 260, powerDraw: 200, performanceScore: 82, fps1080p: 140, fps1440p: 105, fps4K: 58 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4070 Super', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4070 Super', price: 599, wattage: 220, specs: { vram: 12, memoryType: 'GDDR6X', boostClock: 2.48, length: 260, powerDraw: 220, performanceScore: 85, fps1080p: 148, fps1440p: 110, fps4K: 62 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4070 Ti', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4070 Ti', price: 749, wattage: 285, specs: { vram: 12, memoryType: 'GDDR6X', boostClock: 2.61, length: 285, powerDraw: 285, performanceScore: 88, fps1080p: 155, fps1440p: 115, fps4K: 65 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4070 Ti Super', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4070 Ti Super', price: 799, wattage: 285, specs: { vram: 16, memoryType: 'GDDR6X', boostClock: 2.61, length: 285, powerDraw: 285, performanceScore: 90, fps1080p: 162, fps1440p: 120, fps4K: 68 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4080 Super', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4080 Super', price: 999, wattage: 320, specs: { vram: 16, memoryType: 'GDDR6X', boostClock: 2.55, length: 310, powerDraw: 320, performanceScore: 94, fps1080p: 175, fps1440p: 130, fps4K: 75 }, imageUrl: null },
-  { name: 'NVIDIA RTX 4090', category: 'GPU', brand: 'NVIDIA', model: 'RTX 4090', price: 1599, wattage: 450, specs: { vram: 24, memoryType: 'GDDR6X', boostClock: 2.52, length: 336, powerDraw: 450, performanceScore: 99, fps1080p: 210, fps1440p: 155, fps4K: 90 }, imageUrl: null },
-
-  // ─── AMD GPUs ───
-  { name: 'AMD RX 7600', category: 'GPU', brand: 'AMD', model: 'RX 7600', price: 269, wattage: 165, specs: { vram: 8, memoryType: 'GDDR6', boostClock: 2.66, length: 245, powerDraw: 165, performanceScore: 66, fps1080p: 100, fps1440p: 72, fps4K: 38 }, imageUrl: null },
-  { name: 'AMD RX 7600 XT', category: 'GPU', brand: 'AMD', model: 'RX 7600 XT', price: 329, wattage: 190, specs: { vram: 16, memoryType: 'GDDR6', boostClock: 2.76, length: 250, powerDraw: 190, performanceScore: 72, fps1080p: 110, fps1440p: 80, fps4K: 42 }, imageUrl: null },
-  { name: 'AMD RX 7700 XT', category: 'GPU', brand: 'AMD', model: 'RX 7700 XT', price: 449, wattage: 245, specs: { vram: 12, memoryType: 'GDDR6', boostClock: 2.54, length: 260, powerDraw: 245, performanceScore: 78, fps1080p: 130, fps1440p: 95, fps4K: 50 }, imageUrl: null },
-  { name: 'AMD RX 7800 XT', category: 'GPU', brand: 'AMD', model: 'RX 7800 XT', price: 529, wattage: 263, specs: { vram: 16, memoryType: 'GDDR6', boostClock: 2.43, length: 267, powerDraw: 263, performanceScore: 84, fps1080p: 150, fps1440p: 110, fps4K: 60 }, imageUrl: null },
-  { name: 'AMD RX 7900 GRE', category: 'GPU', brand: 'AMD', model: 'RX 7900 GRE', price: 549, wattage: 260, specs: { vram: 16, memoryType: 'GDDR6', boostClock: 2.24, length: 267, powerDraw: 260, performanceScore: 85, fps1080p: 152, fps1440p: 112, fps4K: 62 }, imageUrl: null },
-  { name: 'AMD RX 7900 XT', category: 'GPU', brand: 'AMD', model: 'RX 7900 XT', price: 849, wattage: 315, specs: { vram: 20, memoryType: 'GDDR6', boostClock: 2.4, length: 276, powerDraw: 315, performanceScore: 91, fps1080p: 175, fps1440p: 130, fps4K: 75 }, imageUrl: null },
-  { name: 'AMD RX 7900 XTX', category: 'GPU', brand: 'AMD', model: 'RX 7900 XTX', price: 959, wattage: 355, specs: { vram: 24, memoryType: 'GDDR6', boostClock: 2.5, length: 287, powerDraw: 355, performanceScore: 95, fps1080p: 190, fps1440p: 145, fps4K: 85 }, imageUrl: null },
+  ...INTEL_CPUS.map(e => buildCpu(e[0], 'Intel', e)),
+  ...AMD_CPUS.map(e => buildCpu(e[0], 'AMD', e)),
+  ...NVIDIA_GPUS.map(e => buildGpu(e[0], 'NVIDIA', e)),
+  ...AMD_GPUS.map(e => buildGpu(e[0], 'AMD', e)),
 
   // ─── Motherboards (AM5) ───
   { name: 'ASUS ROG Crosshair X670E Hero', category: 'MOTHERBOARD', brand: 'ASUS', model: 'ROG Crosshair X670E Hero', price: 699, wattage: 30, specs: { socket: 'AM5', chipset: 'X670E', ramType: 'DDR5', maxRam: 192, formFactor: 'ATX', maxTdp: 230 }, imageUrl: null },
