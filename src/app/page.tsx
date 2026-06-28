@@ -88,7 +88,7 @@ function HeroSection() {
           >
             Custom PC Configurator
           </motion.p>
-          <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] leading-[0.9] tracking-tight mb-6 sm:mb-8 select-none">
+          <h1 className="font-display text-[3rem] sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] leading-[0.9] tracking-tight mb-6 sm:mb-8 select-none">
             <motion.span
               initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
               animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
@@ -101,7 +101,7 @@ function HeroSection() {
               initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
               animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
               transition={{ duration: 1.2, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-              className="block text-highlight-strong font-script"
+              className="block text-highlight-strong font-script text-[3.5rem] sm:text-inherit"
             >
               Your Machine
             </motion.span>
