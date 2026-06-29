@@ -50,39 +50,10 @@ const suggestions = [
   'Best AIO cooler for i9-14900K',
 ]
 
-const responses: Record<string, string[]> = {
-  'recommend a gpu for 4k gaming': [
-    'For 4K gaming, I recommend:',
-    '• NVIDIA RTX 4090 (24GB) — Best-in-class 4K performance, ~90-120 FPS in most titles',
-    '• AMD RX 7900 XTX (24GB) — Excellent value, ~80-100 FPS in 4K',
-    '• NVIDIA RTX 4080 Super (16GB) — Great 4K option, ~70-90 FPS',
-    '',
-    'Pair with a high-refresh 4K display and at least 850W PSU.',
-  ],
-  'best cpu for video editing under $500': [
-    'Top CPUs for video editing under $500:',
-    '• AMD Ryzen 9 7900X (12C/24T) — ~$420, excellent multi-core for rendering',
-    '• Intel Core i7-14700K (20C/28T) — ~$390, great QuickSync for h.264/h.265',
-    '• AMD Ryzen 7 7800X3D (8C/16T) — ~$450, not ideal for editing (gaming optimized)',
-    '',
-    'I recommend the Ryzen 9 7900X for raw rendering performance.',
-  ],
-  default: [
-    'I can help with component recommendations, compatibility questions, and build optimization.',
-    '',
-    'Try asking about:',
-    '• GPU recommendations for specific resolutions',
-    '• CPU choices for your budget',
-    '• Compatible motherboard/cooler combinations',
-    '• Power supply requirements',
-    '• RAM speed and capacity recommendations',
-  ],
-}
-
 export default function AdvisorPage() {
   const { playClick, playSelect } = useSound()
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string }[]>([
-    { role: 'bot', content: 'Hello! I\'m your PC build advisor. Ask me about components, compatibility, or recommendations.' },
+    { role: 'bot', content: 'Hello! I\'m Forge AI, your PC build advisor. Ask me about components, compatibility, or recommendations — I know the full Forge PC inventory.' },
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -93,24 +64,66 @@ export default function AdvisorPage() {
   const handleSend = async (text: string) => {
     if (!text.trim() || loading) return
     playClick()
-    setMessages((prev) => [...prev, { role: 'user', content: text }])
+    const userMsg = { role: 'user' as const, content: text }
+    setMessages((prev) => [...prev, userMsg])
     setInput('')
     setLoading(true)
 
-    const lower = text.toLowerCase()
-    let reply: string[]
-    if (lower.includes('gpu') && lower.includes('4k')) reply = responses['recommend a gpu for 4k gaming']
-    else if (lower.includes('cpu') && lower.includes('video editing')) reply = responses['best cpu for video editing under $500']
-    else if (lower.includes('ryzen') || lower.includes('motherboard')) reply = ['For AMD Ryzen 7000 series CPUs, you need an AM5 motherboard like:', '', '• X670E — Premium (PCIe 5.0, extensive I/O)', '• X670 — High-end (PCIe 5.0, good I/O)', '• B650E — Mid-range (PCIe 5.0 GPU)', '• B650 — Value (PCIe 4.0)', '', 'All support DDR5 RAM.']
-    else if (lower.includes('ram')) reply = ['For optimal gaming performance:', '', '• DDR5-6000 CL30 is the sweet spot for Ryzen 7000', '• DDR5-6400+ for Intel 14th gen', '• 32GB (2x16GB) is the current standard for gaming', '• 64GB+ for productivity workloads', '', 'Dual-channel configuration is essential.']
-    else if (lower.includes('psu') || lower.includes('power')) reply = ['Power supply recommendations:', '', '• RTX 4090 system: 1000W-1200W', '• RTX 4080 Super system: 850W-1000W', '• RTX 4070 Ti Super system: 750W-850W', '• RX 7900 XTX system: 900W-1000W', '', 'Always choose 80+ Gold or better for efficiency.']
-    else if (lower.includes('cooler') || lower.includes('aio')) reply = ['Top AIO coolers for i9-14900K:', '', '• Arctic Liquid Freezer III 360 — Best value/performance', '• NZXT Kraken Elite 360 — Premium with LCD display', '• Corsair H150i Elite — Reliable and quiet', '• Lian Li Galahad II — Great performance', '', '360mm AIO recommended for high-end CPUs.']
-    else reply = responses.default
+    const botIndex = messages.length + 1
+    setMessages((prev) => [...prev, { role: 'bot', content: '' }])
 
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { role: 'bot', content: reply.join('\n') }])
-      setLoading(false)
-    }, 600)
+    try {
+      const apiMessages = [...messages, userMsg].map(m => ({ role: m.role, content: m.content }))
+
+      const res = await fetch('/api/advisor/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: apiMessages }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Request failed' }))
+        setMessages((prev) => {
+          const updated = [...prev]
+          updated[botIndex] = { role: 'bot', content: `Error: ${err.error || 'Something went wrong'}` }
+          return updated
+        })
+        setLoading(false)
+        return
+      }
+
+      const reader = res.body?.getReader()
+      if (!reader) {
+        setMessages((prev) => {
+          const updated = [...prev]
+          updated[botIndex] = { role: 'bot', content: 'Error: No response stream' }
+          return updated
+        })
+        setLoading(false)
+        return
+      }
+
+      const decoder = new TextDecoder()
+      let fullContent = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        fullContent += decoder.decode(value, { stream: true })
+        setMessages((prev) => {
+          const updated = [...prev]
+          updated[botIndex] = { role: 'bot', content: fullContent }
+          return updated
+        })
+      }
+    } catch (e) {
+      setMessages((prev) => {
+        const updated = [...prev]
+        updated[botIndex] = { role: 'bot', content: 'Network error — check your connection and try again.' }
+        return updated
+      })
+    }
+    setLoading(false)
   }
 
   return (
@@ -135,11 +148,10 @@ export default function AdvisorPage() {
             </div>
             <div>
               <h1 className="font-display text-xl sm:text-2xl text-[#eee]">AI Component Advisor</h1>
-              <p className="text-[0.5rem] sm:text-[0.55rem] text-[#555]">Get intelligent recommendations for your build</p>
+              <p className="text-[0.5rem] sm:text-[0.55rem] text-[#555]">Powered by NVIDIA — real-time inventory-aware recommendations</p>
             </div>
           </div>
 
-          {/* Chat area */}
           <div className="glass-panel rounded-xl p-3 sm:p-4 mb-3 sm:mb-4" style={{ minHeight: '400px', maxHeight: '500px', overflowY: 'auto' }}>
             <div className="space-y-3 sm:space-y-4">
               {messages.map((msg, i) => (
@@ -154,31 +166,22 @@ export default function AdvisorPage() {
                   <div className={`max-w-[80%] rounded-lg p-2.5 sm:p-3 ${
                     msg.role === 'user' ? 'glass-panel' : 'bg-[#0a0a0a] border border-[#1a1a1a]'
                   }`}>
-                    <p className="text-[0.55rem] sm:text-[0.6rem] text-[#ccc] whitespace-pre-line leading-relaxed">{msg.content}</p>
+                    <p className="text-[0.55rem] sm:text-[0.6rem] text-[#ccc] whitespace-pre-line leading-relaxed">
+                      {msg.content || (i === messages.length - 1 && loading ? (
+                        <span className="inline-flex gap-1">
+                          <motion.span className="w-1.5 h-1.5 bg-[#444] rounded-full inline-block" animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, delay: 0, repeat: Infinity }} />
+                          <motion.span className="w-1.5 h-1.5 bg-[#444] rounded-full inline-block" animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, delay: 0.15, repeat: Infinity }} />
+                          <motion.span className="w-1.5 h-1.5 bg-[#444] rounded-full inline-block" animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, delay: 0.3, repeat: Infinity }} />
+                        </span>
+                      ) : null)}
+                    </p>
                   </div>
                 </motion.div>
               ))}
-              {loading && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full glass-panel flex items-center justify-center">
-                    <Bot className="w-3 h-3 text-[#888]" />
-                  </div>
-                  <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg p-3">
-                    <div className="flex gap-1">
-                      {[1,2,3].map((n) => (
-                        <motion.div key={n} className="w-1.5 h-1.5 bg-[#444] rounded-full"
-                          animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, delay: n * 0.15, repeat: Infinity }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
               <div ref={bottomRef} />
             </div>
           </div>
 
-          {/* Suggestions */}
           <div className="flex flex-wrap gap-2 mb-3">
             {suggestions.map((s) => (
               <button key={s} onClick={() => { playSelect(); handleSend(s) }}
@@ -189,7 +192,6 @@ export default function AdvisorPage() {
             ))}
           </div>
 
-          {/* Input */}
           <div className="flex gap-2">
             <input value={input} onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSend(input) }}
