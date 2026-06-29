@@ -6,11 +6,15 @@ import Link from 'next/link'
 import { Cpu, Send, Bot, User, X, ArrowUpRight } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const { playClick, playToggle } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
@@ -26,13 +30,13 @@ function BurgerMenu() {
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
                 <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
-              <Link href="/">Home</Link>
-              <Link href="/builder">Builder</Link>
-              <Link href="/dashboard">Dashboard</Link>
-              <Link href="/profile">Profile</Link>
-              <Link href="/community">Community</Link>
-              <Link href="/advisor">AI Advisor</Link>
-              <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]"><Link href="/login" className="text-[0.6rem] text-[#555]">Sign In</Link></div>
+              <Link href="/">{_('nav.home')}</Link>
+              <Link href="/builder">{_('nav.builder')}</Link>
+              <Link href="/dashboard">{_('nav.dashboard')}</Link>
+              <Link href="/profile">{_('nav.profile')}</Link>
+              <Link href="/community">{_('nav.community')}</Link>
+              <Link href="/advisor">{_('nav.advisor')}</Link>
+              <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]"><Link href="/login" className="text-[0.6rem] text-[#555]">{_('nav.signin')}</Link></div>
             </motion.div>
           </>
         )}
@@ -52,8 +56,10 @@ const suggestions = [
 
 export default function AdvisorPage() {
   const { playClick, playSelect } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string }[]>([
-    { role: 'bot', content: 'Hello! I\'m Forge AI, your PC build advisor. Ask me about components, compatibility, or recommendations — I know the full Forge PC inventory.' },
+    { role: 'bot', content: _('advisor.welcome') },
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -134,7 +140,7 @@ export default function AdvisorPage() {
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/builder" className="glass-btn-sm rounded-md hidden sm:inline-flex">Builder</Link>
+            <Link href="/builder" className="glass-btn-sm rounded-md hidden sm:inline-flex">{_('nav.builder')}</Link>
             <BurgerMenu />
           </div>
         </div>
@@ -147,8 +153,8 @@ export default function AdvisorPage() {
               <Bot className="w-4 h-4 text-[#888]" />
             </div>
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-[#eee]">AI Component Advisor</h1>
-              <p className="text-[0.5rem] sm:text-[0.55rem] text-[#555]">Powered by NVIDIA — real-time inventory-aware recommendations</p>
+              <h1 className="font-display text-xl sm:text-2xl text-[#eee]">{_('advisor.title')}</h1>
+              <p className="text-[0.5rem] sm:text-[0.55rem] text-[#555]">{_('advisor.subtitle')}</p>
             </div>
           </div>
 
@@ -196,7 +202,7 @@ export default function AdvisorPage() {
             <input value={input} onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSend(input) }}
               className="input flex-1 text-xs sm:text-sm"
-              placeholder="Ask about components, compatibility, or pricing..."
+              placeholder={_('advisor.placeholder')}
             />
             <button onClick={() => handleSend(input)} disabled={loading || !input.trim()}
               className="glass-btn px-3 sm:px-4 rounded-lg text-[0.5rem] text-[#eee] uppercase"

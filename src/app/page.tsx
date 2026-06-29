@@ -18,6 +18,8 @@ import {
 } from '@/components/blocks/animated-gallery'
 import { ZoomParallax } from '@/components/ui/zoom-parallax'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 const categories = [
   { id: 'CPU', label: 'Processors', icon: Cpu, count: 15, spec: 'AM5 / LGA1700', power: '65-253W' },
@@ -59,6 +61,8 @@ function ParallaxLayer({ children, speed = 0.3, className = '' }: { children: Re
 function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const { playHover } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
   const playHoverSafe = () => {
     if (hoverTimer.current) return
@@ -110,7 +114,7 @@ function HeroSection() {
               transition={{ duration: 1.2, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
               className="block text-highlight-strong font-script text-[3.5rem] sm:text-inherit"
             >
-              Your Machine
+              {_('hero.tagline')}
             </motion.span>
           </h1>
           <motion.p
@@ -119,8 +123,7 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 1.2 }}
             className="text-xs sm:text-sm md:text-base text-muted-foreground/60 max-w-lg mx-auto mb-8 sm:mb-12 leading-relaxed tracking-wide px-2"
           >
-            Select from 126 premium components. Real-time compatibility checking.
-            No guesswork. Just the perfect build.
+            {_('hero.subtitle2')}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -133,7 +136,7 @@ function HeroSection() {
                 onMouseEnter={playHoverSafe}
                 className="glass-btn inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-3.5 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
               >
-                <span className="relative z-10">Start Building</span>
+                <span className="relative z-10">{_('hero.start')}</span>
                 <ArrowUpRight className="relative z-10 w-3 h-3 sm:w-4 sm:h-4" />
               </Link>
             </Spotlight>
@@ -142,7 +145,7 @@ function HeroSection() {
                 onMouseEnter={playHoverSafe}
                 className="glass-btn inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 text-[0.5rem] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/70 rounded-xl"
               >
-                View Builds
+                {_('hero.view')}
                 <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </Spotlight>
@@ -174,6 +177,8 @@ function HeroSection() {
 }
 
 function HardwareLab() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <ParallaxLayer speed={0.15}>
       <section className="bg-black py-12 sm:py-20 px-4 sm:px-6">
@@ -185,10 +190,9 @@ function HardwareLab() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-10 sm:mb-16"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Assembly Flow</p>
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">{_('section.assembly')}</p>
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">
-              Three-stage<br />
-              <span className="text-muted-foreground">configuration pipeline</span>
+              {_('section.assembly.desc')}
             </h2>
           </motion.div>
 
@@ -211,10 +215,9 @@ function HardwareLab() {
                     </div>
                     <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-accent-gold/60" />
                   </div>
-                  <h3 className="font-display text-2xl sm:text-3xl text-foreground mb-3 sm:mb-4">Choose Components</h3>
+                  <h3 className="font-display text-2xl sm:text-3xl text-foreground mb-3 sm:mb-4">{_('section.step.choose')}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-lg">
-                    Browse our curated catalog of 126 premium components across 10 categories.
-                    CPUs, GPUs, motherboards, memory, storage — everything you need.
+                    {_('section.step.choose.desc')}
                   </p>
                   <div className="mt-6 sm:mt-8 flex flex-wrap gap-2">
                     {[
@@ -254,8 +257,8 @@ function HardwareLab() {
                       </div>
                       <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-accent-gold/60" />
                     </div>
-                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">Check Compatibility</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">Real-time validation across socket type, form factor, power draw, and clearance.</p>
+                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">{_('section.step.compatibility')}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">{_('section.step.compatibility.desc')}</p>
                     <div className="mt-4 flex flex-col gap-1.5">
                       <div className="flex items-center justify-between text-[0.4rem] tracking-wider text-muted-foreground/50 uppercase font-mono">
                         <span>SOCKET</span>
@@ -293,8 +296,8 @@ function HardwareLab() {
                       </div>
                       <Share2 className="w-5 h-5 sm:w-6 sm:h-6 text-accent-gold/60" />
                     </div>
-                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">Save & Share</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">Save your configuration, share with the community, or export a complete parts list.</p>
+                    <h3 className="font-display text-lg sm:text-xl text-foreground mb-2 sm:mb-3">{_('section.step.share')}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">{_('section.step.share.desc')}</p>
                     <div className="mt-4 flex flex-col gap-1.5">
                       <div className="flex items-center justify-between text-[0.4rem] tracking-wider text-muted-foreground/50 uppercase font-mono">
                         <span>EXPORT</span>
@@ -318,6 +321,8 @@ function HardwareLab() {
 }
 
 function ComponentGrid() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <ParallaxLayer speed={-0.1}>
       <section className="bg-black py-12 sm:py-20 px-4 sm:px-6 border-t border-border">
@@ -329,8 +334,8 @@ function ComponentGrid() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-10 sm:mb-16"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Component Catalog</p>
-            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">126 precision parts.<br /><span className="text-muted-foreground">10 categories. One vision.</span></h2>
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">{_('section.catalog')}</p>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">{_('section.catalog.desc')}</h2>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
@@ -370,6 +375,8 @@ function ComponentGrid() {
 }
 
 function QuickConfig() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const { playSelect, playClick } = useSound()
   const tiers = {
     CPU: [
@@ -411,9 +418,9 @@ function QuickConfig() {
             viewport={{ once: true, margin: '-100px' }}
             className="mb-8 sm:mb-12"
           >
-            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Quick Config</p>
+            <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">{_('section.quickconfig')}</p>
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">
-              Estimate your build.<br /><span className="text-muted-foreground">Adjust tiers in real time.</span>
+              {_('section.estimate')}<br /><span className="text-muted-foreground">{_('section.adjust')}</span>
             </h2>
           </motion.div>
 
@@ -469,17 +476,17 @@ function QuickConfig() {
             <div className="flex items-center gap-3">
               <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               <div>
-                <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] text-muted-foreground uppercase">Estimated Total</p>
+                <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] text-muted-foreground uppercase">{_('section.estimated')}</p>
                 <p className="font-display text-2xl sm:text-3xl text-accent-gold tabular-nums">${total.toLocaleString()}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">+ case, PSU, cooling &amp; peripherals</span>
+              <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">{_('section.spares')}</span>
               <Link href="/builder" onClick={() => playClick()}
                 className="glass-btn-primary text-[0.5rem] sm:text-[0.55rem] px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg flex items-center gap-1.5"
               >
                 <Zap className="w-3 h-3" />
-                Full Builder
+                {_('section.fullbuilder')}
               </Link>
             </div>
           </motion.div>
@@ -491,11 +498,13 @@ function QuickConfig() {
 }
 
 function StatsSection() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const stats = [
-    { value: 126, suffix: '+', label: 'Components' },
-    { value: 15, suffix: '', label: 'Badges & Achievements' },
-    { value: 10, suffix: '', label: 'Compatibility Checks' },
-    { value: 99, suffix: '%', label: 'Accuracy Rate' },
+    { value: 126, suffix: '+', label: _('stats.components') },
+    { value: 15, suffix: '', label: _('stat.badges') },
+    { value: 10, suffix: '', label: _('stat.compatibility') },
+    { value: 99, suffix: '%', label: _('stat.accuracy') },
   ]
 
   return (
@@ -513,7 +522,7 @@ function StatsSection() {
             viewport={{ once: true, margin: '-100px' }}
             className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-10 sm:mb-16 text-center"
           >
-            By the Numbers
+            {_('section.bynumbers')}
           </motion.p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {stats.map((stat, i) => (
@@ -541,6 +550,8 @@ function StatsSection() {
 }
 
 function CTASection() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const { playHover } = useSound()
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
   const playHoverSafe = () => {
@@ -566,20 +577,19 @@ function CTASection() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-4 sm:mb-6">Get Started</p>
+          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-4 sm:mb-6">{_('section.getstarted')}</p>
           <h2 className="font-display text-3xl sm:text-5xl md:text-7xl text-foreground mb-4 sm:mb-6 leading-[1.1]">
-            Ready to build<br /><span className="text-muted-foreground">something extraordinary?</span>
+            {_('section.ready')}<br /><span className="text-muted-foreground">{_('section.something')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mb-8 sm:mb-10 max-w-md mx-auto leading-relaxed">
-            Open the configurator, select your components, and see real-time compatibility.
-            Your dream PC is a few clicks away.
+            {_('section.desc')}
           </p>
           <Spotlight size={400} whiteOpacity={0.1} goldOpacity={0.12}>
           <Link href="/builder"
             onMouseEnter={playHoverSafe}
             className="glass-btn inline-flex items-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
           >
-            Start Building
+            {_('cta.builder')}
             <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </Link>
           </Spotlight>
@@ -590,6 +600,8 @@ function CTASection() {
 }
 
 function SpotlightSection() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <section className="bg-black py-20 sm:py-28 px-4 sm:px-6 border-t border-border">
       <div className="max-w-7xl mx-auto">
@@ -600,7 +612,7 @@ function SpotlightSection() {
           viewport={{ once: true, margin: '-100px' }}
           className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-10 sm:mb-16 text-center"
         >
-          Spotlight Components
+          {_('spotlight.title')}
         </motion.p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-10">
           <motion.div
@@ -643,16 +655,17 @@ const buildImages = [
 ]
 
 function BuildsShowcase() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <section className="bg-black border-t border-border relative">
       <ContainerStagger className="relative z-10 pt-16 sm:pt-24 pb-4 sm:pb-8 px-4 sm:px-6 text-center">
         <ContainerAnimated>
-          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">Featured Builds</p>
+          <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase mb-3 sm:mb-4">{_('featured.title')}</p>
         </ContainerAnimated>
         <ContainerAnimated>
           <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-foreground leading-[1.1]">
-            Real builds.<br />
-            <span className="text-muted-foreground">Real hardware. Real performance.</span>
+            {_('featured.desc')}
           </h2>
         </ContainerAnimated>
       </ContainerStagger>
@@ -663,6 +676,8 @@ function BuildsShowcase() {
 }
 
 export default function HomePage() {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <main className="bg-black text-foreground">
       <HeroSection />
@@ -677,13 +692,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-3">
             <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-            <span className="text-[0.4rem] sm:text-[0.45rem] text-muted-foreground/30 tracking-widest uppercase hidden sm:inline">Custom Computer Builder</span>
+            <span className="text-[0.4rem] sm:text-[0.45rem] text-muted-foreground/30 tracking-widest uppercase hidden sm:inline">{_('footer.tagline')}</span>
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="/builder" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Builder</Link>
-            <Link href="/dashboard" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Dashboard</Link>
-            <Link href="/community" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Community</Link>
-            <Link href="/login" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">Sign In</Link>
+            <Link href="/builder" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">{_('nav.builder')}</Link>
+            <Link href="/dashboard" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">{_('nav.dashboard')}</Link>
+            <Link href="/community" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">{_('nav.community')}</Link>
+            <Link href="/login" className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground/40 tracking-wider uppercase hover:text-muted-foreground/60 transition-colors">{_('nav.signin')}</Link>
           </div>
         </div>
       </footer>

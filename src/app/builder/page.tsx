@@ -15,11 +15,15 @@ import TiltCard from '@/components/effects/TiltCard'
 import { useBuilderStore, useUIStore, type BuilderComponent } from '@/lib/store'
 import { usePathname } from 'next/navigation'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const { playClick, playToggle } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
@@ -35,14 +39,14 @@ function BurgerMenu() {
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
                 <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
-              <Link href="/">Home</Link>
-              <Link href="/builder">Builder</Link>
-              <Link href="/dashboard">Dashboard</Link>
-              <Link href="/profile">Profile</Link>
-              <Link href="/community">Community</Link>
-              <Link href="/advisor">AI Advisor</Link>
+              <Link href="/">{_('nav.home')}</Link>
+              <Link href="/builder">{_('nav.builder')}</Link>
+              <Link href="/dashboard">{_('nav.dashboard')}</Link>
+              <Link href="/profile">{_('nav.profile')}</Link>
+              <Link href="/community">{_('nav.community')}</Link>
+              <Link href="/advisor">{_('nav.advisor')}</Link>
               <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]">
-                <Link href="/login" className="text-[0.6rem] text-[#555]">Sign In</Link>
+                <Link href="/login" className="text-[0.6rem] text-[#555]">{_('nav.signin')}</Link>
               </div>
             </motion.div>
           </>
@@ -76,10 +80,12 @@ function formatSpecs(comp: BuilderComponent): string {
 }
 
 function FPSIndicator({ estimatedFps }: { estimatedFps: { '1080p': number; '1440p': number; '4K': number } | null }) {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   if (!estimatedFps) return (
     <div className="py-10 text-center">
       <BarChart3 className="w-6 h-6 text-[#333] mx-auto mb-3" />
-      <p className="text-[0.6rem] text-[#555]">Select a GPU to estimate FPS</p>
+      <p className="text-[0.6rem] text-[#555]">{_('builder.fpsestimate')}</p>
     </div>
   )
 
@@ -117,29 +123,31 @@ function FPSIndicator({ estimatedFps }: { estimatedFps: { '1080p': number; '1440
 }
 
 function CompatibilityPanel({ errors, warnings }: { errors: string[]; warnings: string[] }) {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const all = [...errors, ...warnings]
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Status</span>
+        <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.status')}</span>
         {all.length === 0 ? (
           <span className="flex items-center gap-1 text-green-500 text-[0.55rem]">
-            <CheckCircle2 className="w-3 h-3" /> All Clear
+            <CheckCircle2 className="w-3 h-3" /> {_('builder.allclear')}
           </span>
         ) : errors.length > 0 ? (
           <span className="flex items-center gap-1 text-red-500 text-[0.55rem]">
-            <XCircle className="w-3 h-3" /> {errors.length} Error{errors.length > 1 ? 's' : ''}
+            <XCircle className="w-3 h-3" /> {errors.length} {errors.length > 1 ? _('builder.errors') : _('builder.error')}
           </span>
         ) : (
           <span className="flex items-center gap-1 text-yellow-500 text-[0.55rem]">
-            <AlertTriangle className="w-3 h-3" /> {warnings.length} Warning{warnings.length > 1 ? 's' : ''}
+            <AlertTriangle className="w-3 h-3" /> {warnings.length} {warnings.length > 1 ? _('builder.warnings') : _('builder.warning')}
           </span>
         )}
       </div>
       {all.length === 0 && (
         <div className="py-6 text-center">
           <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-          <p className="text-xs text-green-500">All components compatible</p>
+          <p className="text-xs text-green-500">{_('builder.compatible')}</p>
         </div>
       )}
       <div className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -164,6 +172,8 @@ export default function BuilderPage() {
   const router = useRouter()
   const store = useBuilderStore()
   const { playClick, playSelect, playToggle, playSuccess, playError, playHover } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
   const playHoverSafe = () => {
     if (hoverTimer.current) return
@@ -234,15 +244,15 @@ export default function BuilderPage() {
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
           <div className="flex items-center gap-1 sm:gap-3">
-            <Link href="/dashboard" className="glass-btn-sm rounded-md hidden sm:inline-flex">Dashboard</Link>
+            <Link href="/dashboard" className="glass-btn-sm rounded-md hidden sm:inline-flex">{_('nav.dashboard')}</Link>
             <button onClick={() => { playClick(); handleSave() }} disabled={saving}
               className="glass-btn-primary text-[0.5rem] sm:text-[0.6rem] flex items-center gap-1.5 rounded-lg px-3 sm:px-4 py-2"
               style={{color: saving ? '#888' : '#eee'}}
             >
-              <Save className="w-3 h-3" /> {saving ? 'Saving...' : 'Save'}
+              <Save className="w-3 h-3" /> {saving ? _('builder.saving') : _('builder.save')}
             </button>
             <button onClick={() => { playClick(); resetBuild() }} className="glass-btn-sm rounded-md hidden sm:inline-flex items-center gap-1.5">
-              <RotateCcw className="w-3 h-3" /> Reset
+              <RotateCcw className="w-3 h-3" /> {_('builder.reset')}
             </button>
             <BurgerMenu />
           </div>
@@ -252,13 +262,13 @@ export default function BuilderPage() {
       {loading ? (
         <div className="flex items-center justify-center py-24">
           <RefreshCw className="w-4 h-4 text-[#555] animate-spin mr-2" />
-          <span className="text-[0.6rem] text-[#555]">Loading components...</span>
+          <span className="text-[0.6rem] text-[#555]">{_('builder.loading')}</span>
         </div>
       ) : (
         <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
-            <span className="text-[0.5rem] sm:text-[0.55rem] text-[#555] tracking-wider uppercase">Build Name</span>
-            <input type="text" value={buildName} onChange={(e) => setBuildName(e.target.value)} className="input w-full sm:flex-1 sm:max-w-xs text-xs sm:text-sm" placeholder="Enter build name..." />
+            <span className="text-[0.5rem] sm:text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.savename')}</span>
+            <input type="text" value={buildName} onChange={(e) => setBuildName(e.target.value)} className="input w-full sm:flex-1 sm:max-w-xs text-xs sm:text-sm" placeholder={_('builder.placeholder')} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
@@ -266,7 +276,7 @@ export default function BuilderPage() {
             <aside className="lg:col-span-2">
               <div className="glass-sidebar rounded-xl overflow-hidden">
                 <div className="p-3 border-b border-[rgba(255,255,255,0.06)]">
-                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Components</span>
+                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.components')}</span>
                 </div>
                 <div className="p-2 space-y-1">
                   {categories.map((cat) => {
@@ -366,14 +376,14 @@ export default function BuilderPage() {
                             return <div key={cat} className="aspect-square glass-sm rounded-xl flex items-center justify-center"><Icon className="w-4 h-4 text-[#444]" /></div>
                           })}
                         </div>
-                        <p className="text-sm text-[#555] mb-2">No components selected</p>
-                        <p className="text-[0.55rem] text-[#333]">Select a category from the left panel to start building</p>
+                        <p className="text-sm text-[#555] mb-2">{_('builder.nocomponents')}</p>
+                        <p className="text-[0.55rem] text-[#333]">{_('builder.selectcategory')}</p>
                       </div>
                     ) : (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Build Summary</span>
-                          <span className="text-[0.5rem] text-[#555]">{Object.keys(components).length}/10 slots filled</span>
+                          <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.summary')}</span>
+                          <span className="text-[0.5rem] text-[#555]">{Object.keys(components).length}/10 {_('builder.slots')}</span>
                         </div>
                         {categories.filter(c => components[c]).map((cat) => {
                           const comp = components[cat]
@@ -403,7 +413,7 @@ export default function BuilderPage() {
               <div className="glass-panel rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[rgba(255,255,255,0.06)]">
                   <BarChart3 className="w-3 h-3 text-[#555]" />
-                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Performance</span>
+                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.performance')}</span>
                 </div>
                 <FPSIndicator estimatedFps={estimatedFps} />
               </div>
@@ -411,24 +421,24 @@ export default function BuilderPage() {
               <div className="glass-panel rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[rgba(255,255,255,0.06)]">
                   <Zap className="w-3 h-3 text-[#555]" />
-                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Power & Price</span>
+                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.powerprice')}</span>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <span className="text-[0.5rem] text-[#555] tracking-wider uppercase">Total</span>
+                    <span className="text-[0.5rem] text-[#555] tracking-wider uppercase">{_('builder.total')}</span>
                     <span className="font-display text-2xl text-[#eee]">${totalPrice.toLocaleString()}</span>
                   </div>
                   <div className="glass-divider" />
-                  <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">Power Draw</span><span className="text-xs text-[#888]">{totalWattage}W</span></div>
-                  <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">Recommended PSU</span><span className="text-xs text-[#888]">{recommendedPsu}W</span></div>
-                  {estimatedFps && <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">Cost per Frame</span><span className="text-xs text-[#888]">${Math.round(totalPrice / estimatedFps['1080p'])}</span></div>}
+                  <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">{_('builder.powerdraw')}</span><span className="text-xs text-[#888]">{totalWattage}W</span></div>
+                  <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">{_('builder.recommendedpsu')}</span><span className="text-xs text-[#888]">{recommendedPsu}W</span></div>
+                  {estimatedFps && <div className="flex justify-between"><span className="text-[0.5rem] text-[#555]">{_('builder.costperframe')}</span><span className="text-xs text-[#888]">${Math.round(totalPrice / estimatedFps['1080p'])}</span></div>}
                 </div>
               </div>
 
               <div className="glass-panel rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[rgba(255,255,255,0.06)]">
                   <Thermometer className="w-3 h-3 text-[#555]" />
-                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">Compatibility</span>
+                  <span className="text-[0.55rem] text-[#555] tracking-wider uppercase">{_('builder.compatibility')}</span>
                 </div>
                 <CompatibilityPanel errors={compatibilityErrors} warnings={compatibilityWarnings} />
               </div>

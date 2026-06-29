@@ -13,6 +13,8 @@ import {
   Trash2, Eye, Edit3
 } from 'lucide-react'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 type Badge = {
   id: string
@@ -69,6 +71,8 @@ export default function ProfilePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { playClick, playToggle } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const [badges, setBadges] = useState<Badge[]>([])
   const [builds, setBuilds] = useState<Build[]>([])
   const [stats, setStats] = useState<UserStats>({ buildsCreated: 0, totalSpent: 0, avgScore: 0, totalWattage: 0 })
@@ -102,7 +106,7 @@ export default function ProfilePage() {
 
   if (status === 'unauthenticated') return null
 
-  const displayName = session?.user?.name || 'User'
+  const displayName = session?.user?.name || _('dashboard.user')
   const email = session?.user?.email || ''
 
   return (
@@ -113,8 +117,8 @@ export default function ProfilePage() {
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
           <div className="flex items-center gap-2">
-            <Link href="/dashboard" className="glass-btn-sm rounded-md">Dashboard</Link>
-            <button onClick={() => { playClick(); signOut() }} className="glass-btn-sm rounded-md flex items-center gap-1"><LogOut className="w-3 h-3" /> Logout</button>
+            <Link href="/dashboard" className="glass-btn-sm rounded-md">{_('profile.dashboard')}</Link>
+            <button onClick={() => { playClick(); signOut() }} className="glass-btn-sm rounded-md flex items-center gap-1"><LogOut className="w-3 h-3" /> {_('profile.logout')}</button>
           </div>
         </div>
       </header>
@@ -131,21 +135,21 @@ export default function ProfilePage() {
                 <h1 className="font-display text-xl text-[#eee]">{displayName}</h1>
                 <p className="text-xs text-[#666] mt-0.5">{email}</p>
                 <div className="flex gap-4 mt-3 justify-center sm:justify-start">
-                  <span className="text-xs text-[#666]">{(session?.user as { role?: string })?.role || 'User'}</span>
-                  <span className="text-xs text-[#666]">Member since 2024</span>
+                  <span className="text-xs text-[#666]">{(session?.user as { role?: string })?.role || _('dashboard.user')}</span>
+                  <span className="text-xs text-[#666]">{_('profile.member')}</span>
                 </div>
               </div>
-              <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg self-center">New Build</Link>
+              <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg self-center">{_('profile.newbuild')}</Link>
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'Builds', value: stats.buildsCreated, icon: Cpu },
-              { label: 'Total Spent', value: `$${(stats.totalSpent / 1000).toFixed(1)}K`, icon: Zap },
-              { label: 'Avg Score', value: stats.avgScore, icon: Activity },
-              { label: 'Wattage', value: `${stats.totalWattage}W`, icon: HardDrive },
+              { label: _('profile.builds'), value: stats.buildsCreated, icon: Cpu },
+              { label: _('profile.totalspent'), value: `$${(stats.totalSpent / 1000).toFixed(1)}K`, icon: Zap },
+              { label: _('profile.avgscore'), value: stats.avgScore, icon: Activity },
+              { label: _('profile.wattage'), value: `${stats.totalWattage}W`, icon: HardDrive },
             ].map((stat, i) => {
               const Icon = stat.icon
               return (
@@ -165,13 +169,13 @@ export default function ProfilePage() {
             <div className="lg:col-span-2 space-y-6">
               <div className="glass-panel rounded-2xl p-4">
                 <h2 className="text-xs uppercase tracking-wider text-[#666] mb-4 flex items-center gap-2">
-                  <HardDrive className="w-3 h-3" /> Build Collection
+                  <HardDrive className="w-3 h-3" /> {_('profile.collection')}
                 </h2>
                 {builds.length === 0 ? (
                   <div className="text-center py-8">
                     <Cpu className="w-8 h-8 text-[#333] mx-auto mb-3" />
-                    <p className="text-xs text-[#666] mb-3">No builds yet</p>
-                    <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg">Create Build</Link>
+                    <p className="text-xs text-[#666] mb-3">{_('profile.nobuilds')}</p>
+                    <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg">{_('profile.create')}</Link>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -180,16 +184,16 @@ export default function ProfilePage() {
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="text-xs text-[#eee] truncate">{build.name}</h3>
                           <span className={`text-[0.5rem] uppercase tracking-wider ${build.isPublic ? 'text-green-400' : 'text-[#666]'}`}>
-                            {build.isPublic ? 'Public' : 'Private'}
+                            {build.isPublic ? _('dashboard.public') : _('dashboard.private')}
                           </span>
                         </div>
                         <div className="flex gap-3 text-[0.6rem] text-[#666] mb-3">
                           <span>${build.totalPrice.toLocaleString()}</span>
                           <span>{build.totalWattage}W</span>
-                          {build.estimatedFps && <span>Score: {build.estimatedFps.score}</span>}
+                          {build.estimatedFps && <span>{_('profile.score')} {build.estimatedFps.score}</span>}
                         </div>
                         <div className="flex gap-1">
-                          <Link href={`/builder?build=${build.id}`} className="glass-btn-sm rounded-md px-2 py-1 flex items-center gap-1"><Eye className="w-3 h-3" /> View</Link>
+                          <Link href={`/builder?build=${build.id}`} className="glass-btn-sm rounded-md px-2 py-1 flex items-center gap-1"><Eye className="w-3 h-3" /> {_('profile.view')}</Link>
                           <Link href={`/builder?build=${build.id}`} className="glass-btn-sm rounded-md p-1"><Edit3 className="w-3 h-3" /></Link>
                           <button className="glass-btn-sm rounded-md p-1"><Trash2 className="w-3 h-3" /></button>
                         </div>
@@ -204,13 +208,13 @@ export default function ProfilePage() {
               {/* Badges */}
               <div className="glass-panel rounded-2xl p-4">
                 <h2 className="text-xs uppercase tracking-wider text-[#666] mb-4 flex items-center gap-2">
-                  <Award className="w-3 h-3" /> Achievements <span className="ml-auto text-[0.5rem] text-[#666]">{badges.length}</span>
+                  <Award className="w-3 h-3" /> {_('profile.achievements')} <span className="ml-auto text-[0.5rem] text-[#666]">{badges.length}</span>
                 </h2>
                 {badges.length === 0 ? (
                   <div className="text-center py-8">
                     <Trophy className="w-6 h-6 text-[#333] mx-auto mb-3" />
-                    <p className="text-xs text-[#666]">No badges earned</p>
-                    <p className="text-[0.55rem] text-[#555] mt-1">Build more to unlock achievements</p>
+                    <p className="text-xs text-[#666]">{_('profile.nobadges')}</p>
+                    <p className="text-[0.55rem] text-[#555] mt-1">{_('profile.nobadges.desc')}</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 gap-2">
@@ -224,11 +228,11 @@ export default function ProfilePage() {
               {/* Settings */}
               <div className="glass-panel rounded-2xl p-4">
                 <h2 className="text-xs uppercase tracking-wider text-[#666] mb-4 flex items-center gap-2">
-                  <Settings className="w-3 h-3" /> Settings
+                  <Settings className="w-3 h-3" /> {_('profile.settings')}
                 </h2>
-                <ToggleSetting label="Auto-save builds" description="Automatically save changes" defaultOn />
-                <ToggleSetting label="Public profile" description="Allow others to view your builds" />
-                <ToggleSetting label="Email notifications" description="Receive build tips and updates" />
+                <ToggleSetting label={_('profile.autosave')} description={_('profile.autosave.desc')} defaultOn />
+                <ToggleSetting label={_('profile.publicprofile')} description={_('profile.publicprofile.desc')} />
+                <ToggleSetting label={_('profile.notifications')} description={_('profile.notifications.desc')} />
               </div>
             </div>
           </div>

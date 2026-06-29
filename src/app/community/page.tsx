@@ -7,11 +7,15 @@ import { Cpu, Eye, DollarSign, Zap, ArrowUpRight, X } from 'lucide-react'
 import { AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const { playClick, playToggle } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
@@ -27,13 +31,13 @@ function BurgerMenu() {
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
                 <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
-              <Link href="/">Home</Link>
-              <Link href="/builder">Builder</Link>
-              <Link href="/dashboard">Dashboard</Link>
-              <Link href="/profile">Profile</Link>
-              <Link href="/community">Community</Link>
-              <Link href="/advisor">AI Advisor</Link>
-              <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]"><Link href="/login" className="text-[0.6rem] text-[#555]">Sign In</Link></div>
+              <Link href="/">{_('nav.home')}</Link>
+              <Link href="/builder">{_('nav.builder')}</Link>
+              <Link href="/dashboard">{_('nav.dashboard')}</Link>
+              <Link href="/profile">{_('nav.profile')}</Link>
+              <Link href="/community">{_('nav.community')}</Link>
+              <Link href="/advisor">{_('nav.advisor')}</Link>
+              <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]"><Link href="/login" className="text-[0.6rem] text-[#555]">{_('nav.signin')}</Link></div>
             </motion.div>
           </>
         )}
@@ -50,6 +54,8 @@ type CommunityBuild = {
 export default function CommunityPage() {
   const [builds, setBuilds] = useState<CommunityBuild[]>([])
   const [loading, setLoading] = useState(true)
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
 
   useEffect(() => {
     fetch('/api/builds/shared')
@@ -66,7 +72,7 @@ export default function CommunityPage() {
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/builder" className="glass-btn-sm rounded-md hidden sm:inline-flex">Builder</Link>
+            <Link href="/builder" className="glass-btn-sm rounded-md hidden sm:inline-flex">{_('nav.builder')}</Link>
             <BurgerMenu />
           </div>
         </div>
@@ -77,10 +83,10 @@ export default function CommunityPage() {
           <div className="mb-8 sm:mb-10">
             <p className="text-[0.5rem] sm:text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-2">Community</p>
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#eee] leading-[1.1]">
-              Community Builds
+              {_('community.title')}
             </h1>
             <p className="text-xs sm:text-sm text-[#555] mt-2 sm:mt-3 max-w-lg">
-              Discover and get inspired by builds from the Forge PC community.
+              {_('community.desc')}
             </p>
           </div>
 
@@ -94,10 +100,10 @@ export default function CommunityPage() {
           ) : builds.length === 0 ? (
             <div className="text-center py-24">
               <Cpu className="w-10 h-10 text-[#333] mx-auto mb-4" />
-              <p className="text-sm text-[#555] mb-2">No builds shared yet</p>
-              <p className="text-[0.55rem] text-[#444] mb-6">Be the first to share your build with the community.</p>
+              <p className="text-sm text-[#555] mb-2">{_('community.none')}</p>
+              <p className="text-[0.55rem] text-[#444] mb-6">{_('community.bethefirst')}</p>
               <Link href="/builder" className="glass-btn inline-flex items-center gap-2 px-5 py-2.5 text-[0.55rem] text-[#eee] uppercase rounded-lg">
-                Create a Build <ArrowUpRight className="w-3 h-3" />
+                {_('community.create')} <ArrowUpRight className="w-3 h-3" />
               </Link>
             </div>
           ) : (
@@ -109,14 +115,14 @@ export default function CommunityPage() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-display text-sm sm:text-base text-[#eee] truncate">{build.name}</h3>
-                    <span className="text-[0.45rem] text-[#555] uppercase tracking-wider flex-shrink-0 ml-2">{build.user?.name || 'Anonymous'}</span>
+                    <span className="text-[0.45rem] text-[#555] uppercase tracking-wider flex-shrink-0 ml-2">{build.user?.name || _('community.anonymous')}</span>
                   </div>
                   <div className="flex gap-3 sm:gap-4 text-[0.5rem] sm:text-[0.55rem] text-[#555] mb-3">
                     <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" /> ${build.totalPrice.toLocaleString()}</span>
                     <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {build.totalWattage}W</span>
                     {build.estimatedFps?.score && <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> Score: {build.estimatedFps.score}</span>}
                   </div>
-                  <Link href={`/builder?build=${build.id}`} className="glass-btn-sm text-[0.5rem] sm:text-[0.55rem] w-full justify-center rounded-lg">View Build</Link>
+                  <Link href={`/builder?build=${build.id}`} className="glass-btn-sm text-[0.5rem] sm:text-[0.55rem] w-full justify-center rounded-lg">{_('community.view')}</Link>
                 </motion.div>
               ))}
             </div>

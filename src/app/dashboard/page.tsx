@@ -11,6 +11,8 @@ import {
   ChevronRight, Trash2, Eye, Share2
 } from 'lucide-react'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 type BuildData = {
   id: string; name: string; totalPrice: number; totalWattage: number
@@ -25,6 +27,8 @@ export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { playClick, playSelect, playToggle, playSuccess, playError } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const [builds, setBuilds] = useState<BuildData[]>([])
   const [activities, setActivities] = useState<ActivityData[]>([])
   const [stats, setStats] = useState({ totalBuilds: 0, totalSpent: 0, avgWattage: 0, achievements: 0 })
@@ -79,7 +83,7 @@ export default function DashboardPage() {
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/builder" className="glass-btn-primary text-[0.5rem] px-3 py-1.5 rounded-lg"><PlusCircle className="w-3 h-3" /> New Build</Link>
+            <Link href="/builder" className="glass-btn-primary text-[0.5rem] px-3 py-1.5 rounded-lg"><PlusCircle className="w-3 h-3" /> {_('dashboard.newbuild')}</Link>
             <div className="flex glass-sm rounded-md overflow-hidden">
               <button onClick={() => { playSelect(); setViewMode('grid') }} className={`p-2 ${viewMode === 'grid' ? 'bg-[rgba(255,255,255,0.06)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
                 <Grid3X3 className="w-3 h-3" />
@@ -89,7 +93,7 @@ export default function DashboardPage() {
               </button>
             </div>
             <button onClick={() => { playClick(); signOut() }} className="glass-btn-sm rounded-md flex items-center gap-1">
-              <LogOut className="w-3 h-3" /> Sign Out
+              <LogOut className="w-3 h-3" /> {_('dashboard.signout')}
             </button>
           </div>
         </div>
@@ -99,23 +103,23 @@ export default function DashboardPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="flex items-center justify-between mb-8">
             <div>
-              <p className="text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-1">Welcome back</p>
-              <h1 className="font-display text-3xl text-[#eee]">Dashboard</h1>
+              <p className="text-[0.6rem] tracking-[0.25em] text-[#555] uppercase mb-1">{_('dashboard.welcome')}</p>
+              <h1 className="font-display text-3xl text-[#eee]">{_('dashboard.page')}</h1>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 px-3 py-1.5 glass-sm rounded-md">
                 <User className="w-3 h-3 text-[#555]" />
-                <span className="text-xs text-[#888]">{session?.user?.name || 'User'}</span>
+                <span className="text-xs text-[#888]">{session?.user?.name || _('dashboard.user')}</span>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
             {[
-              { label: 'Builds', value: stats.totalBuilds, icon: Cpu },
-              { label: 'Total Spent', value: `$${stats.totalSpent.toLocaleString()}`, icon: Activity },
-              { label: 'Avg Wattage', value: `${stats.avgWattage}W`, icon: Activity },
-              { label: 'Achievements', value: stats.achievements, icon: Activity },
+              { label: _('stats.builds'), value: stats.totalBuilds, icon: Cpu },
+              { label: _('dashboard.total'), value: `$${stats.totalSpent.toLocaleString()}`, icon: Activity },
+              { label: _('dashboard.avgwattage'), value: `${stats.avgWattage}W`, icon: Activity },
+              { label: _('stats.achievements'), value: stats.achievements, icon: Activity },
             ].map((stat, i) => {
               const Icon = stat.icon
               return (
@@ -136,14 +140,14 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 glass-panel rounded-2xl p-5">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-xs tracking-wider uppercase text-[#666]">Build Collection</h2>
-                <span className="text-[0.5rem] text-[#444]">{builds.length} build{builds.length !== 1 ? 's' : ''}</span>
+                <h2 className="text-xs tracking-wider uppercase text-[#666]">{_('dashboard.collection')}</h2>
+                <span className="text-[0.5rem] text-[#444]">{builds.length} {_('dashboard.buildscount')}</span>
               </div>
               {builds.length === 0 ? (
                 <div className="text-center py-12">
                   <Cpu className="w-8 h-8 text-[#333] mx-auto mb-3" />
-                  <p className="text-sm text-[#666] mb-4">No builds yet</p>
-                  <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg">Create Your First Build</Link>
+                  <p className="text-sm text-[#666] mb-4">{_('dashboard.nobuilds')}</p>
+                  <Link href="/builder" className="glass-btn-primary text-xs px-4 py-2 rounded-lg">{_('dashboard.createfirst')}</Link>
                 </div>
               ) : viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -154,7 +158,7 @@ export default function DashboardPage() {
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="text-sm text-[#ddd] truncate">{build.name}</h3>
                         <span className={`text-[0.45rem] uppercase tracking-wider ${build.isPublic ? 'text-green-500' : 'text-[#555]'}`}>
-                          {build.isPublic ? 'Public' : 'Private'}
+                          {build.isPublic ? _('dashboard.public') : _('dashboard.private')}
                         </span>
                       </div>
                       <div className="flex gap-3 text-[0.55rem] text-[#666] mb-3">
@@ -202,10 +206,10 @@ export default function DashboardPage() {
             </div>
 
             <div className="glass-panel rounded-2xl p-5">
-              <h2 className="text-xs tracking-wider uppercase text-[#666] mb-5">Recent Activity</h2>
+              <h2 className="text-xs tracking-wider uppercase text-[#666] mb-5">{_('dashboard.recent')}</h2>
               {activities.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-xs text-[#555]">No activity yet</p>
+                  <p className="text-xs text-[#555]">{_('dashboard.noactivity')}</p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-[400px] overflow-y-auto">

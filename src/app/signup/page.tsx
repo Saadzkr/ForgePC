@@ -6,8 +6,12 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle } from 'lucide-react'
 import { useSound } from '@/components/providers/sound-provider'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 function PasswordStrengthBar({ password }: { password: string }) {
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const strength = useMemo(() => {
     let score = 0
     if (password.length >= 8) score++
@@ -19,7 +23,7 @@ function PasswordStrengthBar({ password }: { password: string }) {
     return score
   }, [password])
 
-  const labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong']
+  const labels = [_('signup.weak'), _('signup.fair'), _('signup.good'), _('signup.strong'), _('signup.verystrong')]
 
   return (
     <div className="space-y-1">
@@ -40,6 +44,8 @@ function PasswordStrengthBar({ password }: { password: string }) {
 export default function SignupPage() {
   const router = useRouter()
   const { playSuccess, playError } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -72,20 +78,20 @@ export default function SignupPage() {
           <Link href="/" className="logo-text font-display text-xl block mb-2">
             Forge<span className="logo-dot inline-block mx-0.5 align-middle" />PC
           </Link>
-          <p className="text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase">Create Account</p>
+          <p className="text-[0.6rem] tracking-[0.25em] text-muted-foreground uppercase">{_('signup.title')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder="Your name" required />
+            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">{_('signup.name')}</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder={_('signup.name.placeholder')} required />
           </div>
           <div>
-            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder="user@domain.com" required />
+            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">{_('signup.email')}</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder={_('signup.email.placeholder')} required />
           </div>
           <div>
-            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">Password</label>
+            <label className="text-[0.55rem] tracking-wider uppercase text-muted-foreground block mb-1.5">{_('signup.password')}</label>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="glass-input text-sm w-full px-3 py-2 rounded-lg" placeholder="••••••••" required minLength={8} />
             <div className="mt-2"><PasswordStrengthBar password={password} /></div>
           </div>
@@ -102,15 +108,15 @@ export default function SignupPage() {
           <button type="submit" disabled={loading}
             className="glass-btn-primary w-full rounded-lg text-xs py-3 mt-2"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? _('signup.loading') : _('signup.button')}
           </button>
         </form>
 
         <div className="mt-6 pt-4 text-center glass-divider">
           <p className="text-xs text-muted-foreground">
-            Already have an account?{' '}
+            {_('signup.haveaccount')}{' '}
             <Link href="/login" className="text-foreground underline underline-offset-4 hover:text-white transition-colors">
-              Sign in
+              {_('signup.signin')}
             </Link>
           </p>
         </div>

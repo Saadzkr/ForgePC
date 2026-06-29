@@ -10,20 +10,12 @@ import { LocaleSwitcher } from '@/components/ui/locale-switcher'
 import { useLocale } from '@/components/providers/locale-provider'
 import { t } from '@/lib/i18n'
 
-const navItems = [
-  { href: '/builder', label: 'Builder' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/community', label: 'Community' },
-  { href: '/advisor', label: 'AI Advisor' },
-]
-
-function BurgerMenu() {
+function BurgerMenu({ locale }: { locale: 'en' | 'ar' }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const { playClick, playToggle } = useSound()
-
+  const _ = (k: string) => t(k, locale)
   useEffect(() => { setOpen(false) }, [pathname])
-
   return (
     <>
       <button
@@ -45,11 +37,14 @@ function BurgerMenu() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              {navItems.map((item) => (
-                <Link key={item.href} href={item.href} className="block py-2.5 text-[0.65rem]">{item.label}</Link>
-              ))}
+              <Link href="/" className="block py-2.5 text-[0.65rem]">{_('nav.home')}</Link>
+              <Link href="/builder" className="block py-2.5 text-[0.65rem]">{_('nav.builder')}</Link>
+              <Link href="/dashboard" className="block py-2.5 text-[0.65rem]">{_('nav.dashboard')}</Link>
+              <Link href="/profile" className="block py-2.5 text-[0.65rem]">{_('nav.profile')}</Link>
+              <Link href="/community" className="block py-2.5 text-[0.65rem]">{_('nav.community')}</Link>
+              <Link href="/advisor" className="block py-2.5 text-[0.65rem]">{_('nav.advisor')}</Link>
               <div className="mt-auto pt-8 border-t border-[rgba(255,255,255,0.04)]">
-                <Link href="/login" className="block py-2.5 text-[0.6rem] text-muted-foreground">Sign In</Link>
+                <Link href="/login" className="block py-2.5 text-[0.6rem] text-muted-foreground">{_('nav.signin')}</Link>
               </div>
             </motion.div>
           </>
@@ -61,11 +56,13 @@ function BurgerMenu() {
 
 function SoundToggle() {
   const { muted, toggleMute, playClick } = useSound()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   return (
     <button
       onClick={() => { playClick(); toggleMute() }}
       className="text-muted-foreground hover:text-foreground transition-colors duration-300 p-1.5"
-      aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+      aria-label={muted ? _('sound.unmute') : _('sound.mute')}
     >
       {muted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
     </button>
@@ -74,6 +71,8 @@ function SoundToggle() {
 
 export default function Navbar() {
   const pathname = usePathname()
+  const { locale } = useLocale()
+  const _ = (k: string) => t(k, locale)
   const [scrolled, setScrolled] = useState(false)
   const { playHover } = useSound()
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -88,6 +87,13 @@ export default function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const navItems = [
+    { href: '/builder', label: _('nav.builder') },
+    { href: '/dashboard', label: _('nav.dashboard') },
+    { href: '/community', label: _('nav.community') },
+    { href: '/advisor', label: _('nav.advisor') },
+  ]
 
   return (
     <header
@@ -137,14 +143,14 @@ export default function Navbar() {
             onMouseEnter={playHoverSafe}
             className="text-[0.6rem] tracking-[0.12em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 px-2 py-1.5"
           >
-            Sign In
+            {_('nav.signin')}
           </Link>
           <Link
             href="/builder"
             onMouseEnter={playHoverSafe}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[0.55rem] tracking-[0.15em] uppercase text-black bg-accent-gold hover:bg-[#C9A84C] transition-all duration-300"
           >
-            Build
+            {_('nav.build')}
             <ArrowUpRight className="w-3 h-3" />
           </Link>
         </div>
@@ -152,7 +158,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <LocaleSwitcher />
           <SoundToggle />
-          <BurgerMenu />
+          <BurgerMenu locale={locale} />
         </div>
       </div>
     </header>
