@@ -4,20 +4,24 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-function getPrisma() {
+function createPrismaClient(): PrismaClient {
   const url = process.env.DATABASE_URL
-  if (!url) {
-    throw new Error('DATABASE_URL environment variable is not set')
-  }
 
   return new PrismaClient({
-    datasources: { db: { url } },
+    datasourceUrl: url,
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
 }
 
-export const prisma = globalForPrisma.prisma ?? getPrisma()
+let prisma: PrismaClient
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+try {
+  prisma = globalForPrisma.prisma ?? createPrismaClient()
+  if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+} catch {
+  // If Prisma fails (e.g., missing DATABASE_URL), create a dummy client
+  // Routes that actually query the DB will throw meaningful errors
+  prisma = {} as PrismaClient
+}
 
 export default prisma

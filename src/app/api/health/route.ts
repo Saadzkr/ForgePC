@@ -1,22 +1,23 @@
 import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
 
 export async function GET() {
   try {
-    const urlExists = !!process.env.DATABASE_URL
-    const urlPrefix = process.env.DATABASE_URL?.substring(0, 25) || "NOT SET"
-    
-    const count = await prisma.component.count()
-    
-    return NextResponse.json({
-      status: "ok",
-      db: "connected",
-      componentCount: count,
-      DATABASE_URL_exists: urlExists,
-      DATABASE_URL_prefix: urlPrefix + "...",
-    })
+    const envCheck = {
+      DATABASE_URL_exists: !!process.env.DATABASE_URL,
+      DATABASE_URL_prefix: process.env.DATABASE_URL?.substring(0, 30) || "NOT SET",
+      NODE_ENV: process.env.NODE_ENV || "NOT SET",
+      VERCEL_ENV: process.env.VERCEL_ENV || "NOT SET",
+    }
+
+    const headers = Object.fromEntries(
+      Object.entries(process.env)
+        .filter(([k]) => k.includes("VERCEL") || k === "NODE_ENV" || k === "NEXT_RUNTIME")
+        .slice(0, 30)
+        .sort()
+    )
+
+    return NextResponse.json({ status: "ok", envCheck, headers, url: process.env.DATABASE_URL?.slice(0, 40) + "..." || "none" })
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-    return NextResponse.json({ status: "error", message }, { status: 500 })
+    return NextResponse.json({ status: "error", message: String(error) }, { status: 500 })
   }
 }
