@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle } from 'lucide-react'
+import { useSound } from '@/components/providers/sound-provider'
 
 function PasswordStrengthBar({ password }: { password: string }) {
   const strength = useMemo(() => {
@@ -38,6 +39,7 @@ function PasswordStrengthBar({ password }: { password: string }) {
 
 export default function SignupPage() {
   const router = useRouter()
+  const { playSuccess, playError } = useSound()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,9 +57,10 @@ export default function SignupPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       })
-      if (!res.ok) { const d = await res.json(); setError(d.error || 'Registration failed'); setLoading(false); return }
+      if (!res.ok) { const d = await res.json(); setError(d.error || 'Registration failed'); playError(); setLoading(false); return }
+      playSuccess()
       router.push('/login')
-    } catch { setError('Connection error'); setLoading(false) }
+    } catch (e) { setError('Connection error'); playError(); setLoading(false) }
   }
 
   return (

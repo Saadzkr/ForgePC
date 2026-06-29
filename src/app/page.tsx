@@ -17,6 +17,7 @@ import {
   ContainerAnimated,
 } from '@/components/blocks/animated-gallery'
 import { ZoomParallax } from '@/components/ui/zoom-parallax'
+import { useSound } from '@/components/providers/sound-provider'
 
 const categories = [
   { id: 'CPU', label: 'Processors', icon: Cpu, count: 15, spec: 'AM5 / LGA1700', power: '65-253W' },
@@ -58,6 +59,13 @@ function ParallaxLayer({ children, speed = 0.3, className = '' }: { children: Re
 
 function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const { playHover } = useSound()
+  const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
+  const playHoverSafe = () => {
+    if (hoverTimer.current) return
+    hoverTimer.current = setTimeout(() => { hoverTimer.current = undefined }, 80)
+    playHover()
+  }
 
   return (
     <section ref={sectionRef} className="relative h-screen">
@@ -123,6 +131,7 @@ function HeroSection() {
           >
             <Spotlight size={400} whiteOpacity={0.12} goldOpacity={0.15}>
               <Link href="/builder"
+                onMouseEnter={playHoverSafe}
                 className="glass-btn inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-3.5 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
               >
                 <span className="relative z-10">Start Building</span>
@@ -131,6 +140,7 @@ function HeroSection() {
             </Spotlight>
             <Spotlight size={350} whiteOpacity={0.06} goldOpacity={0.08}>
               <Link href="/dashboard"
+                onMouseEnter={playHoverSafe}
                 className="glass-btn inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 text-[0.5rem] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/70 rounded-xl"
               >
                 View Builds
@@ -361,6 +371,7 @@ function ComponentGrid() {
 }
 
 function QuickConfig() {
+  const { playSelect, playClick } = useSound()
   const tiers = {
     CPU: [
       { label: 'Ryzen 5', price: 200, icon: Cpu },
@@ -426,7 +437,7 @@ function QuickConfig() {
                       </div>
                       <div className="flex flex-col gap-1.5">
                         {opts.map((opt, i) => (
-                          <button key={opt.label} onClick={() => setSelected(prev => ({ ...prev, [key]: i }))}
+                          <button key={opt.label} onClick={() => { playSelect(); setSelected(prev => ({ ...prev, [key]: i })) }}
                             className={`text-left px-3 py-2 rounded-lg text-[0.5rem] sm:text-[0.55rem] tracking-wide transition-all duration-200 ${
                               selected[key] === i
                                 ? 'bg-accent-gold/10 border border-accent-gold/30 text-accent-gold'
@@ -465,7 +476,7 @@ function QuickConfig() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">+ case, PSU, cooling &amp; OS</span>
-              <Link href="/builder"
+              <Link href="/builder" onClick={() => playClick()}
                 className="glass-btn-primary text-[0.5rem] sm:text-[0.55rem] px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg flex items-center gap-1.5"
               >
                 <Zap className="w-3 h-3" />
@@ -531,6 +542,13 @@ function StatsSection() {
 }
 
 function CTASection() {
+  const { playHover } = useSound()
+  const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
+  const playHoverSafe = () => {
+    if (hoverTimer.current) return
+    hoverTimer.current = setTimeout(() => { hoverTimer.current = undefined }, 80)
+    playHover()
+  }
   return (
     <section className="bg-black py-20 sm:py-28 px-4 sm:px-6 border-t border-border relative overflow-hidden">
       <div className="absolute inset-0 bg-grid opacity-[0.08]" />
@@ -559,6 +577,7 @@ function CTASection() {
           </p>
           <Spotlight size={400} whiteOpacity={0.1} goldOpacity={0.12}>
           <Link href="/builder"
+            onMouseEnter={playHoverSafe}
             className="glass-btn inline-flex items-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-[0.55rem] sm:text-xs tracking-[0.15em] uppercase text-foreground rounded-xl"
           >
             Start Building

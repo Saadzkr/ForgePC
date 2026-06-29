@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -14,24 +14,26 @@ import {
 import TiltCard from '@/components/effects/TiltCard'
 import { useBuilderStore, useUIStore, type BuilderComponent } from '@/lib/store'
 import { usePathname } from 'next/navigation'
+import { useSound } from '@/components/providers/sound-provider'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const { playClick, playToggle } = useSound()
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
-      <button onClick={() => setOpen(!open)} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
+      <button onClick={() => { playToggle(); setOpen(!open) }} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
         <span className="burger-line" /><span className="burger-line" /><span className="burger-line" />
       </button>
       <AnimatePresence>
         {open && (
           <>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => setOpen(false)} />
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => { playClick(); setOpen(false) }} />
             <motion.div initial={{x:280}} animate={{x:0}} exit={{x:280}} transition={{type:'spring',damping:25,stiffness:200}} className="burger-menu md:hidden">
               <div className="flex items-center justify-between mb-8">
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-                <button onClick={() => setOpen(false)} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
+                <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
               <Link href="/">Home</Link>
               <Link href="/builder">Builder</Link>
@@ -162,6 +164,13 @@ export default function BuilderPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const store = useBuilderStore()
+  const { playClick, playSelect, playToggle, playSuccess, playError, playHover } = useSound()
+  const hoverTimer = useRef<ReturnType<typeof setTimeout>>()
+  const playHoverSafe = () => {
+    if (hoverTimer.current) return
+    hoverTimer.current = setTimeout(() => { hoverTimer.current = undefined }, 100)
+    playHover()
+  }
   const { components, addComponent, removeComponent, buildName, setBuildName, resetBuild, totalPrice, totalWattage, estimatedFps, compatibilityErrors, compatibilityWarnings } = store
   const allComponents = useUIStore((s) => s.allComponents)
   const setAllComponents = useUIStore((s) => s.setAllComponents)
@@ -196,12 +205,13 @@ export default function BuilderPage() {
   const handleSave = useCallback(async () => {
     setSaving(true)
     try {
-      await fetch('/api/builds', {
+      const res = await fetch('/api/builds', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: buildName, components, totalPrice, totalWattage, estimatedFps, compatibility: { errors: compatibilityErrors, warnings: compatibilityWarnings } }),
       })
-    } catch { /* */ } finally { setSaving(false) }
-  }, [buildName, components, totalPrice, totalWattage, estimatedFps, compatibilityErrors, compatibilityWarnings])
+      if (res.ok) { playSuccess() } else { playError() }
+    } catch (e) { playError() } finally { setSaving(false) }
+  }, [buildName, components, totalPrice, totalWattage, estimatedFps, compatibilityErrors, compatibilityWarnings, playSuccess, playError])
 
   useEffect(() => { if (status === 'unauthenticated') router.push('/login') }, [status, router])
 
@@ -226,13 +236,13 @@ export default function BuilderPage() {
           </Link>
           <div className="flex items-center gap-1 sm:gap-3">
             <Link href="/dashboard" className="glass-btn-sm rounded-md hidden sm:inline-flex">Dashboard</Link>
-            <button onClick={handleSave} disabled={saving}
+            <button onClick={() => { playClick(); handleSave() }} disabled={saving}
               className="glass-btn-primary text-[0.5rem] sm:text-[0.6rem] flex items-center gap-1.5 rounded-lg px-3 sm:px-4 py-2"
               style={{color: saving ? '#888' : '#eee'}}
             >
               <Save className="w-3 h-3" /> {saving ? 'Saving...' : 'Save'}
             </button>
-            <button onClick={resetBuild} className="glass-btn-sm rounded-md hidden sm:inline-flex items-center gap-1.5">
+            <button onClick={() => { playClick(); resetBuild() }} className="glass-btn-sm rounded-md hidden sm:inline-flex items-center gap-1.5">
               <RotateCcw className="w-3 h-3" /> Reset
             </button>
             <BurgerMenu />
@@ -267,7 +277,8 @@ export default function BuilderPage() {
                     const hasComponent = !!components[cat]
                     const count = byCategory[cat]?.length || 0
                     return (
-                      <motion.button key={cat} onClick={() => { setActiveCategory(cat); setShowPanel('components') }}
+                      <motion.button key={cat} onClick={() => { playSelect(); setActiveCategory(cat); setShowPanel('components') }}
+                        onMouseEnter={playHoverSafe}
                         whileTap={{ scale: 0.98 }}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-all duration-150 ${
                           isActive ? 'bg-[rgba(255,255,255,0.06)] border-l-2 border-[#eee]' : 'hover:bg-[rgba(255,255,255,0.02)] border-l-2 border-transparent'
@@ -298,7 +309,7 @@ export default function BuilderPage() {
                         <span className="text-[0.6rem] tracking-wider uppercase text-[#888]">{categoryMeta[activeCategory].desc}</span>
                         <span className="text-[0.5rem] text-[#444]">({currentItems.length})</span>
                       </div>
-                      <button onClick={() => setShowPanel('preview')} className="glass-btn-sm rounded-md p-1"><ChevronRight className="w-3 h-3 rotate-180" /></button>
+                      <button onClick={() => { playClick(); setShowPanel('preview') }} className="glass-btn-sm rounded-md p-1"><ChevronRight className="w-3 h-3 rotate-180" /></button>
                     </div>
                     <div className="divide-y divide-[rgba(255,255,255,0.03)] max-h-[520px] overflow-y-auto">
                       {currentItems.map((component, idx) => {
@@ -314,7 +325,8 @@ export default function BuilderPage() {
                             transition={{ delay: idx * 0.025, duration: 0.3 }}
                           >
                             <TiltCard intensity={3}>
-                              <div onClick={() => { if (isSelected) removeComponent(activeCategory, component.id); else addComponent(activeCategory, component) }}
+                              <div onClick={() => { playToggle(); if (isSelected) removeComponent(activeCategory, component.id); else addComponent(activeCategory, component) }}
+                                onMouseEnter={playHoverSafe}
                                 className={`p-4 transition-colors cursor-pointer ${
                                   isSelected ? 'bg-[rgba(255,255,255,0.06)] border-l-2 border-[#eee]' : 'hover:bg-[rgba(255,255,255,0.02)] border-l-2 border-transparent'
                                 }`}
@@ -375,7 +387,7 @@ export default function BuilderPage() {
                               </div>
                               <div className="flex items-center gap-3 flex-shrink-0">
                                 <span className="text-xs text-[#888]">${item.price}</span>
-                                <button onClick={() => removeComponent(cat, item.id)} className="text-[#444] hover:text-red-400 transition-colors"><Trash2 className="w-3 h-3" /></button>
+                                <button onClick={() => { playClick(); removeComponent(cat, item.id) }} className="text-[#444] hover:text-red-400 transition-colors"><Trash2 className="w-3 h-3" /></button>
                               </div>
                             </div>
                           ))

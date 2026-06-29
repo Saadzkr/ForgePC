@@ -5,24 +5,26 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Cpu, Send, Bot, User, X, ArrowUpRight } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { useSound } from '@/components/providers/sound-provider'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const { playClick, playToggle } = useSound()
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
-      <button onClick={() => setOpen(!open)} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
+      <button onClick={() => { playToggle(); setOpen(!open) }} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
         <span className="burger-line" /><span className="burger-line" /><span className="burger-line" />
       </button>
       <AnimatePresence>
         {open && (
           <>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => setOpen(false)} />
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => { playClick(); setOpen(false) }} />
             <motion.div initial={{x:280}} animate={{x:0}} exit={{x:280}} transition={{type:'spring',damping:25,stiffness:200}} className="burger-menu md:hidden">
               <div className="flex items-center justify-between mb-8">
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-                <button onClick={() => setOpen(false)} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
+                <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
               <Link href="/">Home</Link>
               <Link href="/builder">Builder</Link>
@@ -78,6 +80,7 @@ const responses: Record<string, string[]> = {
 }
 
 export default function AdvisorPage() {
+  const { playClick, playSelect } = useSound()
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string }[]>([
     { role: 'bot', content: 'Hello! I\'m your PC build advisor. Ask me about components, compatibility, or recommendations.' },
   ])
@@ -89,6 +92,7 @@ export default function AdvisorPage() {
 
   const handleSend = async (text: string) => {
     if (!text.trim() || loading) return
+    playClick()
     setMessages((prev) => [...prev, { role: 'user', content: text }])
     setInput('')
     setLoading(true)
@@ -177,7 +181,7 @@ export default function AdvisorPage() {
           {/* Suggestions */}
           <div className="flex flex-wrap gap-2 mb-3">
             {suggestions.map((s) => (
-              <button key={s} onClick={() => handleSend(s)}
+              <button key={s} onClick={() => { playSelect(); handleSend(s) }}
                 className="glass-btn-sm text-[0.4rem] sm:text-[0.45rem] px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md"
               >
                 {s}

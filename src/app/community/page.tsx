@@ -6,24 +6,26 @@ import Link from 'next/link'
 import { Cpu, Eye, DollarSign, Zap, ArrowUpRight, X } from 'lucide-react'
 import { AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { useSound } from '@/components/providers/sound-provider'
 
 function BurgerMenu() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const { playClick, playToggle } = useSound()
   useEffect(() => { setOpen(false) }, [pathname])
   return (
     <>
-      <button onClick={() => setOpen(!open)} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
+      <button onClick={() => { playToggle(); setOpen(!open) }} className={`burger-btn md:hidden ${open ? 'active' : ''}`}>
         <span className="burger-line" /><span className="burger-line" /><span className="burger-line" />
       </button>
       <AnimatePresence>
         {open && (
           <>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => setOpen(false)} />
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="burger-overlay md:hidden" onClick={() => { playClick(); setOpen(false) }} />
             <motion.div initial={{x:280}} animate={{x:0}} exit={{x:280}} transition={{type:'spring',damping:25,stiffness:200}} className="burger-menu md:hidden">
               <div className="flex items-center justify-between mb-8">
                 <span className="logo-text text-base">Forge<span className="logo-dot inline-block mx-0.5" />PC</span>
-                <button onClick={() => setOpen(false)} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
+                <button onClick={() => { playClick(); setOpen(false) }} className="text-[#555] hover:text-[#eee] transition-colors"><X className="w-4 h-4" /></button>
               </div>
               <Link href="/">Home</Link>
               <Link href="/builder">Builder</Link>

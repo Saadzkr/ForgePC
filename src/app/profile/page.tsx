@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -12,6 +12,7 @@ import {
   Trophy, Flame, Target, HardDrive,
   Trash2, Eye, Edit3
 } from 'lucide-react'
+import { useSound } from '@/components/providers/sound-provider'
 
 type Badge = {
   id: string
@@ -48,13 +49,14 @@ function BadgeCard({ badge, earnedAt }: { badge: Badge['badge']; earnedAt: strin
 
 function ToggleSetting({ label, description, defaultOn = false }: { label: string; description?: string; defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn)
+  const { playToggle } = useSound()
   return (
     <div className="flex items-center justify-between py-3 border-b border-[#1a1a1a] last:border-0">
       <div>
         <span className="text-xs text-[#eee]">{label}</span>
         {description && <p className="text-[0.6rem] text-[#666] mt-0.5">{description}</p>}
       </div>
-      <Switch.Root checked={on} onCheckedChange={setOn}
+      <Switch.Root checked={on} onCheckedChange={(v) => { playToggle(); setOn(v) }}
         className={`relative w-[36px] h-[20px] rounded-full transition-colors ${on ? 'bg-[#eee]' : 'bg-[#333]'}`}
       >
         <Switch.Thumb className={`block w-[16px] h-[16px] bg-black rounded-full transition-transform translate-x-0.5 ${on ? 'translate-x-[18px]' : ''}`} />
@@ -66,6 +68,7 @@ function ToggleSetting({ label, description, defaultOn = false }: { label: strin
 export default function ProfilePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { playClick, playToggle } = useSound()
   const [badges, setBadges] = useState<Badge[]>([])
   const [builds, setBuilds] = useState<Build[]>([])
   const [stats, setStats] = useState<UserStats>({ buildsCreated: 0, totalSpent: 0, avgScore: 0, totalWattage: 0 })
@@ -111,7 +114,7 @@ export default function ProfilePage() {
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/dashboard" className="glass-btn-sm rounded-md">Dashboard</Link>
-            <button onClick={() => signOut()} className="glass-btn-sm rounded-md flex items-center gap-1"><LogOut className="w-3 h-3" /> Logout</button>
+            <button onClick={() => { playClick(); signOut() }} className="glass-btn-sm rounded-md flex items-center gap-1"><LogOut className="w-3 h-3" /> Logout</button>
           </div>
         </div>
       </header>

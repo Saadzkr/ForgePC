@@ -10,6 +10,7 @@ import {
   List, PlusCircle, LogOut, User,
   ChevronRight, Trash2, Eye, Share2
 } from 'lucide-react'
+import { useSound } from '@/components/providers/sound-provider'
 
 type BuildData = {
   id: string; name: string; totalPrice: number; totalWattage: number
@@ -23,6 +24,7 @@ type ActivityData = {
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { playClick, playSelect, playToggle, playSuccess, playError } = useSound()
   const [builds, setBuilds] = useState<BuildData[]>([])
   const [activities, setActivities] = useState<ActivityData[]>([])
   const [stats, setStats] = useState({ totalBuilds: 0, totalSpent: 0, avgWattage: 0, achievements: 0 })
@@ -47,13 +49,14 @@ export default function DashboardPage() {
 
   const handleDelete = useCallback(async (id: string) => {
     const res = await fetch(`/api/builds/${id}`, { method: 'DELETE' })
-    if (res.ok) setBuilds((prev) => prev.filter((b) => b.id !== id))
-  }, [])
+    if (res.ok) { setBuilds((prev) => prev.filter((b) => b.id !== id)); playSuccess() }
+    else playError()
+  }, [playSuccess, playError])
 
   const handleTogglePublic = useCallback(async (id: string, isPublic: boolean) => {
     const res = await fetch(`/api/builds/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isPublic: !isPublic }) })
-    if (res.ok) setBuilds((prev) => prev.map((b) => b.id === id ? { ...b, isPublic: !isPublic } : b))
-  }, [])
+    if (res.ok) { setBuilds((prev) => prev.map((b) => b.id === id ? { ...b, isPublic: !isPublic } : b)); playToggle() }
+  }, [playToggle])
 
   if (status === 'loading' || loading) return (
     <div className="min-h-screen bg-black flex items-center justify-center">
@@ -78,14 +81,14 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <Link href="/builder" className="glass-btn-primary text-[0.5rem] px-3 py-1.5 rounded-lg"><PlusCircle className="w-3 h-3" /> New Build</Link>
             <div className="flex glass-sm rounded-md overflow-hidden">
-              <button onClick={() => setViewMode('grid')} className={`p-2 ${viewMode === 'grid' ? 'bg-[rgba(255,255,255,0.06)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
+              <button onClick={() => { playSelect(); setViewMode('grid') }} className={`p-2 ${viewMode === 'grid' ? 'bg-[rgba(255,255,255,0.06)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
                 <Grid3X3 className="w-3 h-3" />
               </button>
-              <button onClick={() => setViewMode('list')} className={`p-2 ${viewMode === 'list' ? 'bg-[rgba(255,255,255,0.06)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
+              <button onClick={() => { playSelect(); setViewMode('list') }} className={`p-2 ${viewMode === 'list' ? 'bg-[rgba(255,255,255,0.06)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
                 <List className="w-3 h-3" />
               </button>
             </div>
-            <button onClick={() => signOut()} className="glass-btn-sm rounded-md flex items-center gap-1">
+            <button onClick={() => { playClick(); signOut() }} className="glass-btn-sm rounded-md flex items-center gap-1">
               <LogOut className="w-3 h-3" /> Sign Out
             </button>
           </div>
@@ -160,13 +163,13 @@ export default function DashboardPage() {
                         <span>{new Date(build.createdAt).toLocaleDateString()}</span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleTogglePublic(build.id, build.isPublic)} className="glass-btn-sm rounded-md">
+                        <button onClick={() => { playToggle(); handleTogglePublic(build.id, build.isPublic) }} className="glass-btn-sm rounded-md">
                           <Share2 className="w-3 h-3" />
                         </button>
                         <Link href={`/builder?build=${build.id}`} className="glass-btn-sm rounded-md">
                           <Eye className="w-3 h-3" />
                         </Link>
-                        <button onClick={() => handleDelete(build.id)} className="glass-btn-sm rounded-md">
+                        <button onClick={() => { playClick(); handleDelete(build.id) }} className="glass-btn-sm rounded-md">
                           <Trash2 className="w-3 h-3 text-red-400" />
                         </button>
                       </div>
@@ -188,9 +191,9 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleTogglePublic(build.id, build.isPublic)} className="glass-btn-sm rounded-md p-1.5"><Share2 className="w-3 h-3" /></button>
+                        <button onClick={() => { playToggle(); handleTogglePublic(build.id, build.isPublic) }} className="glass-btn-sm rounded-md p-1.5"><Share2 className="w-3 h-3" /></button>
                         <Link href={`/builder?build=${build.id}`} className="glass-btn-sm rounded-md p-1.5"><Eye className="w-3 h-3" /></Link>
-                        <button onClick={() => handleDelete(build.id)} className="glass-btn-sm rounded-md p-1.5"><Trash2 className="w-3 h-3 text-red-400" /></button>
+                        <button onClick={() => { playClick(); handleDelete(build.id) }} className="glass-btn-sm rounded-md p-1.5"><Trash2 className="w-3 h-3 text-red-400" /></button>
                       </div>
                     </motion.div>
                   ))}

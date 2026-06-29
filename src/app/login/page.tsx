@@ -6,9 +6,11 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle } from 'lucide-react'
+import { useSound } from '@/components/providers/sound-provider'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { playSuccess, playError } = useSound()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -20,8 +22,8 @@ export default function LoginPage() {
     setLoading(true)
 
     const res = await signIn('credentials', { email, password, redirect: false })
-    if (res?.error) { setError('Invalid credentials'); setLoading(false) }
-    else router.push('/dashboard')
+    if (res?.error) { setError('Invalid credentials'); playError(); setLoading(false) }
+    else { playSuccess(); router.push('/dashboard') }
   }
 
   return (
