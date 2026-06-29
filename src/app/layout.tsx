@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Inter, JetBrains_Mono, Lavishly_Yours } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import { TransitionProvider } from '@/components/providers/transition-provider'
 import Navbar from '@/components/ui/navbar'
 
 const playfair = Playfair_Display({
@@ -71,8 +72,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-black text-[#eee] antialiased">
         <Providers>
-          <Navbar />
-          <div className="pt-14 sm:pt-16">{children}</div>
+          <TransitionProvider>
+            <Navbar />
+            <div className="pt-14 sm:pt-16">{children}</div>
+          </TransitionProvider>
         </Providers>
       </body>
     </html>
