@@ -61,7 +61,6 @@ const categoryMeta: Record<string, { icon: React.ElementType; label: string; des
   PSU: { icon: Power, label: 'PSU', desc: 'Power Supply' },
   CASE: { icon: Box, label: 'Case', desc: 'Chassis' },
   COOLING: { icon: Fan, label: 'Cooling', desc: 'CPU Cooler' },
-  OS: { icon: Wifi, label: 'OS', desc: 'Operating System' },
   PERIPHERAL: { icon: Activity, label: 'Peripheral', desc: 'Accessories' },
 }
 

@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-mo
 import Link from 'next/link'
 import {
   Cpu, CheckCircle, Share2, ArrowUpRight, HardDrive, Monitor,
-  MemoryStick, Fan, Box, Power, Wifi, Disc, Activity,
+  MemoryStick, Fan, Box, Power, Disc, Activity,
   Zap, DollarSign
 } from 'lucide-react'
 import { GLSLHills } from '@/components/ui/glsl-hills'
@@ -28,7 +28,6 @@ const categories = [
   { id: 'PSU', label: 'PSUs', icon: Power, count: 10, spec: '750-1600W', power: '80+ Plat' },
   { id: 'CASE', label: 'Cases', icon: Box, count: 12, spec: 'ATX / ITX', power: '' },
   { id: 'COOLING', label: 'Cooling', icon: Fan, count: 14, spec: 'AIO / Air', power: '' },
-  { id: 'OS', label: 'OS', icon: Wifi, count: 2, spec: 'Win 11 / Linux', power: '' },
   { id: 'PERIPHERAL', label: 'Peripherals', icon: Activity, count: 8, spec: 'USB / BT', power: '' },
 ]
 
@@ -475,7 +474,7 @@ function QuickConfig() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">+ case, PSU, cooling &amp; OS</span>
+              <span className="text-[0.45rem] sm:text-[0.5rem] text-muted-foreground">+ case, PSU, cooling &amp; peripherals</span>
               <Link href="/builder" onClick={() => playClick()}
                 className="glass-btn-primary text-[0.5rem] sm:text-[0.55rem] px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg flex items-center gap-1.5"
               >
