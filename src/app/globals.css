@@ -4,29 +4,55 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 93%;
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 80%;
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 80%;
-    --primary: 0 0% 93%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 7%;
-    --secondary-foreground: 0 0% 65%;
-    --muted: 0 0% 6%;
-    --muted-foreground: 0 0% 35%;
+    --background: 0 0% 3%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 85%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 85%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 80%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 55%;
     --accent: 42 66% 52%;
     --accent-foreground: 0 0% 0%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 90%;
-    --border: 0 0% 10%;
-    --input: 0 0% 10%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
     --ring: 42 66% 52%;
     --radius: 0;
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --font-display: 'Playfair Display', serif;
+  }
+
+  .rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .rtl .logo-text {
+    letter-spacing: 0;
+  }
+
+  .rtl .burger-menu {
+    right: auto;
+    left: 0;
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .rtl .ml-auto {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+
+  .rtl .mr-auto {
+    margin-right: 0 !important;
+    margin-left: auto !important;
   }
 
   body {
@@ -222,10 +248,10 @@
   }
 
   .glass-panel {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
       0 4px 24px rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -389,11 +415,11 @@
 
   /* Glass variant — subtle, for dense layouts (stats, sidebar items) */
   .glass-sm {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     position: relative;
     overflow: hidden;
   }
@@ -498,11 +524,11 @@
     gap: 0.5rem;
     padding: 0.4rem 0.75rem;
     font-size: 0.6rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
     transition: all 0.2s ease;
     cursor: pointer;
     color: hsl(var(--foreground));

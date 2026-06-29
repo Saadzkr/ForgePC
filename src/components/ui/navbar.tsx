@@ -6,6 +6,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, ArrowUpRight, Volume2, VolumeX } from 'lucide-react'
 import { useSound } from '@/components/providers/sound-provider'
+import { LocaleSwitcher } from '@/components/ui/locale-switcher'
+import { useLocale } from '@/components/providers/locale-provider'
+import { t } from '@/lib/i18n'
 
 const navItems = [
   { href: '/builder', label: 'Builder' },
@@ -127,6 +130,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <LocaleSwitcher />
           <SoundToggle />
           <Link
             href="/login"
@@ -146,6 +150,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
+          <LocaleSwitcher />
           <SoundToggle />
           <BurgerMenu />
         </div>
