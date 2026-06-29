@@ -19,113 +19,126 @@ type SoundContextType = {
 const SoundContext = createContext<SoundContextType | null>(null)
 
 let audioCtx: AudioContext | null = null
+let readyResolve: (() => void) | null = null
+let ctxReady = false
 
-function getCtx(): AudioContext | null {
-  if (typeof window === 'undefined') return null
-  if (!audioCtx) {
-    try {
-      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
-    } catch {
-      return null
+function initAudio() {
+  if (audioCtx) return
+  if (typeof window === 'undefined') return
+  try {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    audioCtx.onstatechange = () => {
+      if (audioCtx?.state === 'running' && !ctxReady) {
+        ctxReady = true
+        readyResolve?.()
+        readyResolve = null
+      }
     }
+  } catch {
+    return
   }
+}
+
+function ensureReady(): Promise<void> {
+  if (ctxReady) return Promise.resolve()
+  if (!audioCtx) return Promise.resolve()
   if (audioCtx.state === 'suspended') {
     audioCtx.resume()
   }
-  return audioCtx
+  if (audioCtx.state === 'running') {
+    ctxReady = true
+    return Promise.resolve()
+  }
+  return new Promise((resolve) => {
+    readyResolve = resolve
+  })
 }
 
-function playClickSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function schedule(fn: (ctx: AudioContext, t: number) => void) {
+  if (!audioCtx) return
+  fn(audioCtx, audioCtx.currentTime)
+}
+
+function playClickSound() { schedule((ctx, t) => {
   const o = ctx.createOscillator()
   const g = ctx.createGain()
   o.type = 'square'
-  o.frequency.setValueAtTime(800, ctx.currentTime)
-  o.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.03)
-  g.gain.setValueAtTime(0.12, ctx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
+  o.frequency.setValueAtTime(800, t)
+  o.frequency.exponentialRampToValueAtTime(400, t + 0.03)
+  g.gain.setValueAtTime(0.12, t)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.05)
   o.connect(g).connect(ctx.destination)
-  o.start(ctx.currentTime)
-  o.stop(ctx.currentTime + 0.05)
-}
+  o.start(t)
+  o.stop(t + 0.05)
+})}
 
-function playHoverSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function playHoverSound() { schedule((ctx, t) => {
   const o = ctx.createOscillator()
   const g = ctx.createGain()
   o.type = 'sine'
-  o.frequency.setValueAtTime(1500, ctx.currentTime)
-  g.gain.setValueAtTime(0.03, ctx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02)
+  o.frequency.setValueAtTime(1500, t)
+  g.gain.setValueAtTime(0.03, t)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.02)
   o.connect(g).connect(ctx.destination)
-  o.start(ctx.currentTime)
-  o.stop(ctx.currentTime + 0.02)
-}
+  o.start(t)
+  o.stop(t + 0.02)
+})}
 
-function playSelectSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function playSelectSound() { schedule((ctx, t) => {
   const o = ctx.createOscillator()
   const g = ctx.createGain()
   o.type = 'sine'
-  o.frequency.setValueAtTime(220, ctx.currentTime)
-  o.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1)
-  g.gain.setValueAtTime(0.18, ctx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
+  o.frequency.setValueAtTime(220, t)
+  o.frequency.exponentialRampToValueAtTime(440, t + 0.1)
+  g.gain.setValueAtTime(0.18, t)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.15)
   o.connect(g).connect(ctx.destination)
-  o.start(ctx.currentTime)
-  o.stop(ctx.currentTime + 0.15)
-}
+  o.start(t)
+  o.stop(t + 0.15)
+})}
 
-function playSuccessSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function playSuccessSound() { schedule((ctx, t) => {
   const notes = [523.25, 659.25, 783.99]
   notes.forEach((freq, i) => {
     const o = ctx.createOscillator()
     const g = ctx.createGain()
     o.type = 'sine'
-    o.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08)
-    g.gain.setValueAtTime(0, ctx.currentTime + i * 0.08)
-    g.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.08 + 0.02)
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.2)
+    const nt = t + i * 0.08
+    o.frequency.setValueAtTime(freq, nt)
+    g.gain.setValueAtTime(0, nt)
+    g.gain.linearRampToValueAtTime(0.15, nt + 0.02)
+    g.gain.exponentialRampToValueAtTime(0.001, nt + 0.2)
     o.connect(g).connect(ctx.destination)
-    o.start(ctx.currentTime + i * 0.08)
-    o.stop(ctx.currentTime + i * 0.08 + 0.2)
+    o.start(nt)
+    o.stop(nt + 0.2)
   })
-}
+})}
 
-function playErrorSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function playErrorSound() { schedule((ctx, t) => {
   const o = ctx.createOscillator()
   const g = ctx.createGain()
   o.type = 'sawtooth'
-  o.frequency.setValueAtTime(300, ctx.currentTime)
-  o.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.25)
-  g.gain.setValueAtTime(0.12, ctx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+  o.frequency.setValueAtTime(300, t)
+  o.frequency.exponentialRampToValueAtTime(150, t + 0.25)
+  g.gain.setValueAtTime(0.12, t)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.3)
   o.connect(g).connect(ctx.destination)
-  o.start(ctx.currentTime)
-  o.stop(ctx.currentTime + 0.3)
-}
+  o.start(t)
+  o.stop(t + 0.3)
+})}
 
-function playToggleSound() {
-  const ctx = getCtx()
-  if (!ctx) return
+function playToggleSound() { schedule((ctx, t) => {
   const o = ctx.createOscillator()
   const g = ctx.createGain()
   o.type = 'sine'
-  o.frequency.setValueAtTime(600, ctx.currentTime)
-  o.frequency.setValueAtTime(900, ctx.currentTime + 0.02)
-  g.gain.setValueAtTime(0.1, ctx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06)
+  o.frequency.setValueAtTime(600, t)
+  o.frequency.setValueAtTime(900, t + 0.02)
+  g.gain.setValueAtTime(0.1, t)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.06)
   o.connect(g).connect(ctx.destination)
-  o.start(ctx.currentTime)
-  o.stop(ctx.currentTime + 0.06)
-}
+  o.start(t)
+  o.stop(t + 0.06)
+})}
 
 const PLAY_FN: Record<SoundType, () => void> = {
   click: playClickSound,
@@ -139,7 +152,7 @@ const PLAY_FN: Record<SoundType, () => void> = {
 export function SoundProvider({ children }: { children: ReactNode }) {
   const [muted, setMuted] = useState(true)
   const [ready, setReady] = useState(false)
-  const initRef = useRef(false)
+  const inited = useRef(false)
 
   useEffect(() => {
     const stored = localStorage.getItem('forge-sound-muted')
@@ -156,12 +169,37 @@ export function SoundProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('forge-sound-muted', String(muted))
   }, [muted, ready])
 
-  const play = useCallback((type: SoundType) => {
+  useEffect(() => {
+    function warmup() {
+      if (inited.current) return
+      inited.current = true
+      initAudio()
+      ensureReady()
+      document.removeEventListener('pointerdown', warmup)
+      document.removeEventListener('keydown', warmup)
+    }
+    document.addEventListener('pointerdown', warmup, { once: true })
+    document.addEventListener('keydown', warmup, { once: true })
+    return () => {
+      document.removeEventListener('pointerdown', warmup)
+      document.removeEventListener('keydown', warmup)
+    }
+  }, [])
+
+  const play = useCallback(async (type: SoundType) => {
     if (muted) return
+    await ensureReady()
     PLAY_FN[type]?.()
   }, [muted])
 
-  const toggleMute = useCallback(() => setMuted(m => !m), [])
+  const toggleMute = useCallback(() => {
+    if (!inited.current) {
+      inited.current = true
+      initAudio()
+      ensureReady()
+    }
+    setMuted(m => !m)
+  }, [])
 
   const value: SoundContextType = {
     muted,
