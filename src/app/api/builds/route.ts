@@ -14,8 +14,29 @@ const createBuildSchema = z.object({
   isPublic: z.boolean().optional(),
 })
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const isPublicFeed = searchParams.get("public") === "true"
+
+    if (isPublicFeed) {
+      const builds = await prisma.build.findMany({
+        where: { isPublic: true },
+        orderBy: { createdAt: "desc" },
+        include: { user: { select: { name: true } } },
+      })
+      const parsed = builds.map((b) => ({
+        id: b.id,
+        name: b.name,
+        totalPrice: b.totalPrice,
+        totalWattage: b.totalWattage,
+        estimatedFps: b.estimatedFps ? JSON.parse(b.estimatedFps) : null,
+        createdAt: b.createdAt,
+        user: b.user,
+      }))
+      return NextResponse.json(parsed)
+    }
+
     const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

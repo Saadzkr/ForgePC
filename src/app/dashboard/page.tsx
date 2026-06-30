@@ -45,8 +45,14 @@ export default function DashboardPage() {
       fetch('/api/user/activities').then((r) => r.ok ? r.json() : []),
     ]).then(([b, s, a]) => {
       setBuilds(b as BuildData[])
-      setStats({ totalBuilds: (s as any).totalBuilds || 0, totalSpent: (s as any).totalSpent || 0, avgWattage: (s as any).avgWattage || 0, achievements: (s as any).achievements || 0 })
-      setActivities(a.slice(0, 8))
+      const statsData = s as any
+      setStats({
+        totalBuilds: statsData.buildsCreated || 0,
+        totalSpent: statsData.totalSpent || 0,
+        avgWattage: statsData.totalWattage || 0,
+        achievements: statsData.highestFps || 0,
+      })
+      setActivities((a as ActivityData[]).slice(0, 8))
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [status, router])

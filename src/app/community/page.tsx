@@ -58,7 +58,7 @@ export default function CommunityPage() {
   const _ = (k: string) => t(k, locale)
 
   useEffect(() => {
-    fetch('/api/builds/shared')
+    fetch('/api/builds?public=true')
       .then((r) => r.ok ? r.json() : [])
       .then((data) => { setBuilds(data); setLoading(false) })
       .catch(() => setLoading(false))

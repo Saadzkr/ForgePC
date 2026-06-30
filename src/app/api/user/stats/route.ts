@@ -15,7 +15,13 @@ export async function GET() {
     })
 
     if (!stats) {
-      return NextResponse.json({ error: "Stats not found" }, { status: 404 })
+      return NextResponse.json({
+        buildsCreated: 0,
+        buildsSaved: 0,
+        totalSpent: 0,
+        highestFps: 0,
+        totalWattage: 0,
+      })
     }
 
     return NextResponse.json(stats)
